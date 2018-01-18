@@ -1,4 +1,4 @@
-// $Id: debug.cpp,v 1.8 2016-06-23 17:20:50-07 - - $
+// $Id: debug.cpp,v 1.3 2014-06-26 16:51:09-07 - - $
 
 #include <climits>
 #include <iostream>
@@ -15,11 +15,13 @@ void debugflags::setflags (const string& initflags) {
       if (flag == '@') flags.assign (flags.size(), true);
                   else flags[flag] = true;
    }
+   // Note that DEBUGF can trace setflags.
    if (getflag ('x')) {
       string flag_chars;
       for (size_t index = 0; index < flags.size(); ++index) {
-         if (getflag (index)) flag_chars += static_cast<char> (index);
+         if (getflag (index)) flag_chars += (char) index;
       }
+      DEBUGF ('x', "debugflags::flags = " << flag_chars);
    }
 }
 
@@ -34,7 +36,7 @@ bool debugflags::getflag (char flag) {
 
 void debugflags::where (char flag, const char* file, int line,
                         const char* func) {
-   note() << "DEBUG(" << flag << ") " << file << "[" << line << "] "
-          << func << "()" << endl;
+   cout << sys_info::execname() << ": DEBUG(" << flag << ") "
+        << file << "[" << line << "] " << func << "()" << endl;
 }
 

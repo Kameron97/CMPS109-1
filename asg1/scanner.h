@@ -1,4 +1,4 @@
-// $Id: scanner.h,v 1.12 2016-06-23 17:22:50-07 - - $
+// $Id: scanner.h,v 1.2 2014-04-08 19:04:03-07 - - $
 
 #ifndef __SCANNER_H__
 #define __SCANNER_H__
@@ -9,29 +9,24 @@ using namespace std;
 
 #include "debug.h"
 
-enum class tsymbol {SCANEOF, NUMBER, OPERATOR};
-
-struct token {
-   tsymbol symbol;
+enum terminal_symbol {NUMBER, OPERATOR, SCANEOF};
+struct token_t {
+   terminal_symbol symbol;
    string lexinfo;
-   token (tsymbol sym, const string& lex = string()):
-          symbol(sym), lexinfo(lex){
-   }
 };
 
 class scanner {
    private:
-      istream& instream;
-      int nextchar {instream.get()};
-      bool good() { return nextchar != EOF; }
-      char get();
+      bool seen_eof;
+      char lookahead;
+      void advance();
    public:
-      scanner (istream& instream = cin): instream(instream) {}
-      token scan();
+      scanner();
+      token_t scan();
 };
 
-ostream& operator<< (ostream&, tsymbol);
-ostream& operator<< (ostream&, const token&);
+ostream& operator<< (ostream&, const terminal_symbol&);
+ostream& operator<< (ostream&, const token_t&);
 
 #endif
 

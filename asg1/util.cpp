@@ -1,6 +1,7 @@
-// $Id: util.cpp,v 1.1 2016-06-14 18:19:17-07 - - $
+// $Id: util.cpp,v 1.10 2014-04-09 16:45:33-07 - - $
 
-#include <cstring>
+#include <cstdlib>
+#include <sstream>
 using namespace std;
 
 #include "util.h"
@@ -8,27 +9,26 @@ using namespace std;
 ydc_exn::ydc_exn (const string& what): runtime_error (what) {
 }
 
-string exec::execname_; // Must be initialized from main().
-int exec::status_ = EXIT_SUCCESS;
+const string octal (long decimal) {
+   ostringstream ostring;
+   ostring.setf (ios::oct);
+   ostring << decimal;
+   return ostring.str();
+}
 
-void exec::execname (const string& argv0) {
-   execname_ = basename (argv0.c_str());
+string sys_info::execname_; // Must be initialized from main().
+int sys_info::status_ = EXIT_SUCCESS;
+
+void sys_info::execname (const string& argv0) {
+   execname_ = argv0;
    cout << boolalpha;
    cerr << boolalpha;
    DEBUGF ('Y', "execname = " << execname_);
 }
 
-void exec::status (int new_status) {
-   new_status &= 0xFF;
-   if (status_ < new_status) status_ = new_status;
-}
-
-ostream& note() {
-   return cerr << exec::execname() << ": ";
-}
-
-ostream& error() {
-   exec::status (EXIT_FAILURE);
-   return note();
+ostream& complain() {
+   sys_info::status (EXIT_FAILURE);
+   cerr << sys_info::execname() << ": ";
+   return cerr;
 }
 

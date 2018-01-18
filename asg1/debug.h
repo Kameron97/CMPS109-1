@@ -1,4 +1,4 @@
-// $Id: debug.h,v 1.3 2015-07-01 18:52:26-07 - - $
+// $Id: debug.h,v 1.1 2014-04-08 19:04:03-07 - - $
 
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
@@ -9,7 +9,8 @@ using namespace std;
 
 //
 // debug -
-//    static class for maintaining global debug flags.
+//    static class for maintaining global debug flags, each indicated
+//    by a single character.
 // setflags -
 //    Takes a string argument, and sets a flag for each char in the
 //    string.  As a special case, '@', sets all flags.
@@ -17,6 +18,7 @@ using namespace std;
 //    Used by the DEBUGF macro to check to see if a flag has been set.
 //    Not to be called by user code.
 //
+
 class debugflags {
    private:
       static vector<bool> flags;
@@ -27,6 +29,7 @@ class debugflags {
                          const char* func);
 };
 
+
 //
 // DEBUGF -
 //    Macro which expands into trace code.  First argument is a
@@ -37,6 +40,11 @@ class debugflags {
 //    will print two words and a newline if flag 'u' is  on.
 //    Traces are preceded by filename, line number, and function.
 //
+
+#ifdef NDEBUG
+#define DEBUGF(FLAG,CODE) ;
+#define DEBUGS(FLAG,STMT) ;
+#else
 #define DEBUGF(FLAG,CODE) { \
            if (debugflags::getflag (FLAG)) { \
               debugflags::where (FLAG, __FILE__, __LINE__, __func__); \
@@ -49,5 +57,7 @@ class debugflags {
               STMT; \
            } \
         }
+#endif
+
 #endif
 

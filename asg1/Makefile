@@ -1,48 +1,49 @@
-# $Id: Makefile,v 1.27 2018-01-05 16:54:08-08 - - $
+# $Id: Makefile,v 1.11 2014-07-02 20:01:17-07 - - $
 
 MKFILE      = Makefile
 DEPFILE     = ${MKFILE}.dep
 NOINCL      = ci clean spotless
 NEEDINCL    = ${filter ${NOINCL}, ${MAKECMDGOALS}}
 GMAKE       = ${MAKE} --no-print-directory
-COMPILECPP  = g++ -std=gnu++17 -g -O0 -Wall -Wextra -Wold-style-cast
-MAKEDEPCPP  = g++ -std=gnu++17 -MM
 
-MODULES     = ubigint bigint libfns scanner debug util
-CPPHEADER   = ${MODULES:=.h} iterstack.h relops.h
-CPPSOURCE   = ${MODULES:=.cpp} main.cpp
+COMPILECPP  = g++ -g -O0 -Wall -Wextra -std=gnu++11
+MAKEDEPCPP  = g++ -MM
+
+CPPHEADER   = bigint.h   scanner.h   debug.h   util.h   iterstack.h
+CPPSOURCE   = bigint.cpp scanner.cpp debug.cpp util.cpp main.cpp
 EXECBIN     = ydc
 OBJECTS     = ${CPPSOURCE:.cpp=.o}
-MODULESRC   = ${foreach MOD, ${MODULES}, ${MOD}.h ${MOD}.cpp}
-OTHERSRC    = ${filter-out ${MODULESRC}, ${CPPHEADER} ${CPPSOURCE}}
-ALLSOURCES  = ${MODULESRC} ${OTHERSRC} ${MKFILE}
-LISTING     = Listing.ps
+OTHERS      = ${MKFILE} README
+ALLSOURCES  = ${CPPHEADER} ${CPPSOURCE} ${OTHERS}
 
 all : ${EXECBIN}
+	- checksource ${ALLSOURCES}
 
 ${EXECBIN} : ${OBJECTS}
 	${COMPILECPP} -o $@ ${OBJECTS}
 
 %.o : %.cpp
-	- cpplint.py.perl $<
 	${COMPILECPP} -c $<
 
 ci : ${ALLSOURCES}
 	- checksource ${ALLSOURCES}
 	cid + ${ALLSOURCES}
 
-lis : ${ALLSOURCES}
-	mkpspdf ${LISTING} ${ALLSOURCES} ${DEPFILE}
-
 clean :
-	- rm ${OBJECTS} ${DEPFILE} core ${EXECBIN}.errs
+	- rm ${OBJECTS} ${DEPFILE} ${EXECBIN}.errs
 
 spotless : clean
-	- rm ${EXECBIN} ${LISTING} ${LISTING:.ps=.pdf}
+	- rm ${EXECBIN}
 
 dep : ${CPPSOURCE} ${CPPHEADER}
 	@ echo "# ${DEPFILE} created `LC_TIME=C date`" >${DEPFILE}
 	${MAKEDEPCPP} ${CPPSOURCE} >>${DEPFILE}
+
+submit :
+	submit cmps109-wm.w15 asg2 ${ALLSOURCES}
+	rm -rf latest_submit
+	mkdir latest_submit
+	cp ${ALLSOURCES} .score/* latest_submit
 
 ${DEPFILE} :
 	@ touch ${DEPFILE}

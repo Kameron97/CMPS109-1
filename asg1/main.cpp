@@ -1,10 +1,9 @@
-// $Id: main.cpp,v 1.54 2016-06-14 18:19:17-07 - - $
 
-#include <cassert>
+
 #include <deque>
 #include <iostream>
+#include <map>
 #include <stdexcept>
-#include <unordered_map>
 #include <utility>
 using namespace std;
 
@@ -13,7 +12,6 @@ using namespace std;
 #include "bigint.h"
 #include "debug.h"
 #include "iterstack.h"
-#include "libfns.h"
 #include "scanner.h"
 #include "util.h"
 
@@ -35,7 +33,8 @@ void do_arith (bigint_stack& stack, const char oper) {
       case '/': result = left / right; break;
       case '%': result = left % right; break;
       case '^': result = pow (left, right); break;
-      default: throw invalid_argument ("do_arith operator "s + oper);
+      default: throw invalid_argument (
+                     string ("do_arith operator is ") + oper);
    }
    DEBUGF ('d', "result = " << result);
    stack.push (result);
@@ -46,7 +45,6 @@ void do_clear (bigint_stack& stack, const char) {
    stack.clear();
 }
 
-
 void do_dup (bigint_stack& stack, const char) {
    bigint top = stack.top();
    DEBUGF ('d', top);
@@ -54,7 +52,7 @@ void do_dup (bigint_stack& stack, const char) {
 }
 
 void do_printall (bigint_stack& stack, const char) {
-   for (const auto& elem: stack) cout << elem << endl;
+   for (const auto &elem: stack) cout << elem << endl;
 }
 
 void do_print (bigint_stack& stack, const char) {
@@ -72,28 +70,29 @@ void do_quit (bigint_stack&, const char) {
 }
 
 using function_t = void (*)(bigint_stack&, const char);
-using fn_hash = unordered_map<string,function_t>;
-fn_hash do_functions = {
-   {"+"s, do_arith},
-   {"-"s, do_arith},
-   {"*"s, do_arith},
-   {"/"s, do_arith},
-   {"%"s, do_arith},
-   {"^"s, do_arith},
-   {"Y"s, do_debug},
-   {"c"s, do_clear},
-   {"d"s, do_dup},
-   {"f"s, do_printall},
-   {"p"s, do_print},
-   {"q"s, do_quit},
+using fn_map = map<string,function_t>;
+fn_map do_functions = {
+   {"+", do_arith},
+   {"-", do_arith},
+   {"*", do_arith},
+   {"/", do_arith},
+   {"%", do_arith},
+   {"^", do_arith},
+   {"Y", do_debug},
+   {"c", do_clear},
+   {"d", do_dup},
+   {"f", do_printall},
+   {"p", do_print},
+   {"q", do_quit},
 };
 
-
 //
 // scan_options
 //    Options analysis:  The only option is -Dflags. 
 //
+
 void scan_options (int argc, char** argv) {
+   if (sys_info::execname().size() == 0) sys_info::execname (argv[0]);
    opterr = 0;
    for (;;) {
       int option = getopt (argc, argv, "@:");
@@ -103,48 +102,46 @@ void scan_options (int argc, char** argv) {
             debugflags::setflags (optarg);
             break;
          default:
-            error() << "-" << static_cast<char> (optopt)
-                    << ": invalid option" << endl;
+            complain() << "-" << (char) optopt << ": invalid option"
+                       << endl;
             break;
       }
    }
    if (optind < argc) {
-      error() << "operand not permitted" << endl;
+      complain() << "operand not permitted" << endl;
    }
 }
 
-
 //
 // Main function.
 //
+
 int main (int argc, char** argv) {
-   exec::execname (argv[0]);
+   sys_info::execname (argv[0]);
    scan_options (argc, argv);
    bigint_stack operand_stack;
    scanner input;
    try {
       for (;;) {
          try {
-            token lexeme = input.scan();
-            switch (lexeme.symbol) {
-               case tsymbol::SCANEOF:
-                  throw ydc_quit();
+            token_t token = input.scan();
+            if (token.symbol == SCANEOF) break;
+            switch (token.symbol) {
+               case NUMBER:
+                  operand_stack.push (token.lexinfo);
                   break;
-               case tsymbol::NUMBER:
-                  operand_stack.push (bigint (lexeme.lexinfo));
-                  break;
-               case tsymbol::OPERATOR: {
-                  fn_hash::const_iterator fn
-                           = do_functions.find (lexeme.lexinfo);
+               case OPERATOR: {
+                  fn_map::const_iterator fn
+                           = do_functions.find (token.lexinfo);
                   if (fn == do_functions.end()) {
-                     throw ydc_exn (octal (lexeme.lexinfo[0])
+                     throw ydc_exn (octal (token.lexinfo[0])
                                     + " is unimplemented");
                   }
-                  fn->second (operand_stack, lexeme.lexinfo.at(0));
+                  fn->second (operand_stack, token.lexinfo.at(0));
                   break;
                   }
                default:
-                  assert (false);
+                  break;
             }
          }catch (ydc_exn& exn) {
             cout << exn.what() << endl;
@@ -153,6 +150,6 @@ int main (int argc, char** argv) {
    }catch (ydc_quit&) {
       // Intentionally left empty.
    }
-   return exec::status();
+   return sys_info::status();
 }
 
