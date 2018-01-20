@@ -113,37 +113,42 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
 // Same logic as subtraction by hand. 
 // Precondition:  left >= right
 // Postcondition: result >= 0
-bigvalue_t do_bigsub (const bigvalue_t& left, 
-                      const bigvalue_t& right) {
+bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t diff;
     digit_t borrow(0);
     digit_t digit_diff(0);
-    size_t i;
-    for (i = 0; i < right.size(); i++) {
+    size_t i; = 0
+    while (i < right.size()) {
         // Check if we need to borrow from the next highest digit
-        if (left.at(i) - borrow < right.at(i)) {
-            digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
-            borrow = 1;
-        } else {
+        if (left.at(i) - borrow >= right.at(i)) {
             digit_diff = left.at(i) - right.at(i) - borrow;
             borrow = 0;
-        }
-        diff.push_back(digit_diff);
-    }
-    while (i < left.size()) {
-        if (left.at(i) < borrow) {
-            digit_diff = 10 + left.at(i) - borrow; 
-            borrow = 1;
         } else {
-            digit_diff = left.at(i) - borrow;
-            borrow = 0;
+            digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
+            borrow = 1;
         }
         diff.push_back(digit_diff);
         i++;
     }
+    for (; i < left.size(); i++) {
+        if (left.at(i) >= borrow) {        
+            digit_diff = left.at(i) - borrow;
+            borrow = 0;
+        } else {
+            digit_diff = 10 + left.at(i) - borrow; 
+            borrow = 1;
+        }
+        diff.push_back(digit_diff);
+    }
     // Remove leading zeroes
-    while (diff.size() > 1 && diff.back() == 0)
-        diff.pop_back();
+    boolean zerosPresent = false;
+    if (diff.size() > 1 && diff.back() == 0) {
+        zerosPresent = true;
+        while (zerosPresent) {
+             diff.pop_back();
+        }
+    }
+       
     return diff;
 }
 
