@@ -12,7 +12,7 @@ using namespace std;
 
 #define LINE_LIMIT 69
 
-// Constructors
+
 
 bigint::bigint (const bigvalue_t& that): big_value (that) {
     DEBUGF ('~', this << " -> " << big_value << " (copy ctor)")
@@ -28,13 +28,7 @@ bigint::bigint (const string& that) {
     DEBUGF ('~', this << " -> " << big_value << " (string ctor)")
 }
 
-// Initialization method
-// Takes a string representing a number and instantiates the
-// bigvalue_t vector with the corresponding digits.
-// 
-// The input can indicate negativity via '_' (if it comes from
-// the user input) or '-' (if it comes from the to_string method
-// when the bigint(long) construtor is used)
+
 
 void bigint::init (const string& that) {
     negative = false;
@@ -55,8 +49,7 @@ void bigint::init (const string& that) {
     long_value = negative ? - newval : + newval;
 }
 
-// Adds two digit vectors. 
-// Same logic as addition by hand.
+
 bigvalue_t do_bigadd (const bigvalue_t& left, 
                       const bigvalue_t& right) {
     bigvalue_t sum;
@@ -65,8 +58,7 @@ bigvalue_t do_bigadd (const bigvalue_t& left,
     size_t min_size = min(left.size(), right.size());
     size_t i;
     for (i = 0; i < min_size; i++) {
-        // Compute digit sum. If greater than 9, take note
-        // with the carry bit and deduct 10 from the sum.
+     
         digit_sum = left.at(i) + right.at(i) + carry;
         if (digit_sum > 9) {
             carry = 1;
@@ -99,18 +91,14 @@ bigvalue_t do_bigadd (const bigvalue_t& left,
         i++;
     }
 
-    // Last step: if the carry bit is set, we need to
-    // push back a 1 to be the new highest digit.
+
     if (carry == 1)
         sum.push_back(1);
 
     return sum;
 }
 
-// Subtracts two digit vectors. 
-// Same logic as subtraction by hand. 
-// Precondition:  left >= right
-// Postcondition: result >= 0
+
 bigvalue_t do_bigsub (const bigvalue_t& left, 
                       const bigvalue_t& right) {
     bigvalue_t diff;
@@ -118,7 +106,6 @@ bigvalue_t do_bigsub (const bigvalue_t& left,
     digit_t digit_diff(0);
     size_t i;
     for (i = 0; i < right.size(); i++) {
-        // Check if we need to borrow from the next highest digit
         if (left.at(i) - borrow < right.at(i)) {
             digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
             borrow = 1;
@@ -139,23 +126,22 @@ bigvalue_t do_bigsub (const bigvalue_t& left,
         diff.push_back(digit_diff);
         i++;
     }
-    // Remove leading zeroes
+
     while (diff.size() > 1 && diff.back() == 0)
         diff.pop_back();
     return diff;
 }
 
-// Returns true if left < right, assumes both are positive
-// integers.
+
 bool do_bigless (const bigvalue_t& left,
                  const bigvalue_t& right) {
-    // if the vectors' sizes differ the answer is trivial
+   
     if (left.size() < right.size())
         return true;
     else if (left.size() > right.size())
         return false;
 
-    // iterate from highest order digits to find smaller input
+    
     auto lit = left.crbegin();
     auto rit = right.crbegin();
     for (; lit != left.crend(); lit++, rit++)
@@ -164,13 +150,11 @@ bool do_bigless (const bigvalue_t& left,
         else if (*lit > *rit)
             return false;
 
-    // in this case they are equal
+    
     return false;
 }
 
-// Overloading the addition and subtraction operators.  
-// Determines proper sign and makes the appropriate call to 
-// do_bigadd or do_bigless.
+
 
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint sum;
@@ -212,7 +196,7 @@ bigint operator- (const bigint& left, const bigint& right) {
     }
 }
 
-// Overloading the positive and negative unary operators.
+
 
 bigint operator+ (const bigint& right) {
     bigint pos_bigint(right);
@@ -226,8 +210,7 @@ bigint operator- (const bigint& right) {
     return pos_bigint;
 }
 
-// Multiplies two digit vectors. 
-// Same logic as long multiplication 
+
 bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t product(left.size() + right.size(), 0);
     digit_t c, d;
@@ -253,15 +236,7 @@ bigint operator* (const bigint& left, const bigint& right) {
     return product;
 }
 
-//
-// Long division algorithm.
-//
-// From P. Brinch Hansen,
-// Multiple-length division revisited: A tour of the minefield.
-
-// Partial product, quotient, and remainder assume that
-// x is a multiple length integer and k is a single digit
-// i.e. 0 <= k < 10
+/
 
 bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
     int temp, carry;
@@ -305,23 +280,12 @@ bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
     for (size_t i = size - 1; i < size; i--) {
         carry = (x.at(i) + 10 * carry) % k;
     }
-    // Since k is a digit, the remainder must also be a digit
     DEBUGF ('/', "partial_rem(" << x << ", " 
                  << k << ") = " << carry)
     return bigvalue_t(1, carry);
 }
 
-//
-// The computation of a quotient digit q_k breaks down into the
-// simpler prefix operations. The assignment
-//          q_t = trialdigit(r, d, k, m)
-// defines a trial digit, q_t = q_e, which is an inital estimate
-// of q_k. The operands of the trial digit function are prefixes
-// of the remainder r and the divisor d
-//      r[k + m - 2 ... k + m]    d[m - 1 ... m - 2]
-// where
-//          2 <= m <= k + m
-//
+
 
 digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
                    size_t k, size_t m) {
@@ -351,15 +315,14 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
 }
 
 
-// Returns r[k ... k + m] < dq 
-// (Note dq = dq[m ... 0])
+
 bool smaller(const bigvalue_t& r, const bigvalue_t& dq,
                 size_t k, size_t m) {
     DEBUGF ('/', "smaller(" << r << ", " << dq << ", " <<
                 (int) k << ", " << (int) m << ")")
     int i, j;
 
-    // Add leading zeroes if necessary, to make comparison easier
+    
     bigvalue_t r_copy(r);
     while (r_copy.size() <= m + k)
         r_copy.push_back(0);
@@ -379,12 +342,11 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq,
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
-// Returns r - dq * 10^k, corresponding to the long divison step of
-// subtracting from the high order digits of the current remainder.
+
 bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq,
                       size_t k, size_t m) {
     bigvalue_t dq_shifted;
-    // Do the multiplication locally, since it is trivial
+    
     for (size_t i = 0; i < k; i++)
         dq_shifted.push_back(0);
     for (auto it = dq.cbegin(); it != dq.cend(); it++)
@@ -397,21 +359,7 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq,
     return do_bigsub (r, dq_shifted); 
 }
 
-// Auxiliary function used by divide(x, y). The call to divide
-// checks for the simple cases where x < y or y.size() == 1.
-//
-// If neither of those cases apply, this function is called. 
-// n and m are the size of x and y, respectively.
-//
-// The procedure mainly works by estimating the quotient digits,
-// correcting as necessary, and then subtracting the most recently
-// computed quotient digit (scaled to the apropriate power of 10)
-// from the current remainder.
-//
-// There is also a scaling step that reduces the expected number
-// of digit corrections.
-//
-// See the referenced paper for a full description of the algorithm.
+
 bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
                       size_t n, size_t m) {
     DEBUGF ('/', "longdiv(" << x << ", " << y << ", " <<
@@ -442,8 +390,7 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
     return make_pair(bigint(q), bigint(partial_quot(r,f)));
 }
 
-// Main division function. Checks for corner cases and then calls
-// longdiv(x, y, x.size(), y.size()) if necessary.
+
 bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
     DEBUGF ('/', "divide(" << x << ", " << y << ")")
     int n, m, y1;
@@ -460,8 +407,7 @@ bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
     }
 }
 
-// Overloading the division operator. Determines sign of quotient and
-// then calls divide(left, right).
+
 bigint operator/ (const bigint& left, const bigint& right) {
     if (right == 0) throw ydc_exn ("ydc: divid by zero");
     bigint result = divide (left.big_value, right.big_value).first;
@@ -469,16 +415,14 @@ bigint operator/ (const bigint& left, const bigint& right) {
     return result;
 }
 
-// Overloading the modulus operator. Determines sign of quotient and
-// then calls divide(left, right).
+
 bigint operator% (const bigint& left, const bigint& right) {
     bigint result = divide (left.big_value, right.big_value).second;
     result.negative = left.negative ^ right.negative;
     return result;
 }
 
-// Overloading the equality operator. Checks sizes and signs, and if
-// necessary it steps through the digits to determine equality.
+
 bool operator== (const bigint& left, const bigint& right) {
     if (left.negative != right.negative)
         return false;
@@ -492,8 +436,7 @@ bool operator== (const bigint& left, const bigint& right) {
     return true;
 }
 
-// Overloading the less than operator. Checks sign and then will 
-// make call to do_bigless depending on the situation.
+
 bool operator< (const bigint& left, const bigint& right) {
     bool retval;
     if (left.negative) {
@@ -534,7 +477,7 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
     return out;
 }
 
-// Tries to convert the bigint to a long and fails if out of range
+
 long bigint::to_long() const {
     DEBUGF ('^', "this.long_value = " << long_value);
     if (*this <= bigint (numeric_limits<long>::min())
@@ -543,8 +486,7 @@ long bigint::to_long() const {
     return long_value;
 }
 
-// Implementation of the power operation. Not overloading because
-// we require that the exponent be able to fit inside a long.
+
 bigint pow (const bigint& base, const bigint& exponent) {
     DEBUGF ('^', "base = " << base << ", exponent = " << exponent);
     if (base == 0) return 0;
@@ -556,10 +498,10 @@ bigint pow (const bigint& base, const bigint& exponent) {
         expt = - expt;
     }
     while (expt > 0) {
-        if (expt & 1) { //odd
+        if (expt & 1) { 
             result = result * base_copy;
             --expt;
-        }else { //even
+        }else { 
             base_copy = base_copy * base_copy;
             expt /= 2;
         }
