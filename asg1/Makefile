@@ -9,8 +9,8 @@ GMAKE       = ${MAKE} --no-print-directory
 COMPILECPP  = g++ -g -O0 -Wall -Wextra -std=gnu++11
 MAKEDEPCPP  = g++ -MM
 
-CPPHEADER   = bigint.h   scanner.h   debug.h   util.h   iterstack.h
-CPPSOURCE   = bigint.cpp scanner.cpp debug.cpp util.cpp main.cpp
+CPPHEADER   = bigint.h   scanner.h   debug.h   util.h   iterstack.h   ubigint.h
+CPPSOURCE   = bigint.cpp scanner.cpp debug.cpp util.cpp main.cpp ubigint.cpp
 EXECBIN     = ydc
 OBJECTS     = ${CPPSOURCE:.cpp=.o}
 OTHERS      = ${MKFILE} README
