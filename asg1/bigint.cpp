@@ -197,7 +197,7 @@ bigint operator- (const bigint& left, const bigint& right) {
 }
 
 
-
+/*
 bigint operator+ (const bigint& right) {
     bigint pos_bigint(right);
     pos_bigint.negative = false;
@@ -209,7 +209,7 @@ bigint operator- (const bigint& right) {
     pos_bigint.negative = true;
     return pos_bigint;
 }
-
+*/
 
 bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t product(left.size() + right.size(), 0);
