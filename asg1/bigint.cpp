@@ -144,7 +144,7 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     // Remove leading zeroes
     do {
         diff.pop_back();
-    } while ()diff.size() > 1 && diff.back() == 0
+    } while (diff.size() > 1 && diff.back() == 0);
  
        
     return diff;
