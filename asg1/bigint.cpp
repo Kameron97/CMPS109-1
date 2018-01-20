@@ -236,7 +236,7 @@ bigint operator* (const bigint& left, const bigint& right) {
     return product;
 }
 
-/
+
 
 bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
     int temp, carry;
