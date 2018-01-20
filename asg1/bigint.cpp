@@ -57,8 +57,7 @@ void bigint::init (const string& that) {
 
 // Adds two digit vectors. 
 // Same logic as addition by hand.
-bigvalue_t do_bigadd (const bigvalue_t& left, 
-                      const bigvalue_t& right) {
+bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t sum;
     
     size_t min_size = min(left.size(), right.size());
@@ -78,32 +77,33 @@ bigvalue_t do_bigadd (const bigvalue_t& left,
         sum.push_back(digit_sum);
         i++;
     }
-    while (i < left.size()) {
+    for (; i < left.size(); i++) {
         digit_sum = left.at(i) + carry;
-        if (digit_sum > 9) {
+        if (digit_sum <= 9) {   
+            carry = 0;
+        } else {
             carry = 1;
             digit_sum -= 10;
-        } else {
-            carry = 0;
         }
         sum.push_back(digit_sum);
-        i++;
     }
-    while (i < right.size()) {
+    for (; i < right.size(); i++) {
         digit_sum = right.at(i) + carry;
-        if (digit_sum > 9) {
-            carry = 1;
-            digit_sum -= 10;
-        } else {
+        if (digit_sum <= 9) {         
             carry = 0;
+        } else {
+              carry = 1;
+            digit_sum -= 10;
         }
         sum.push_back(digit_sum);
-        i++;
+        
     }
 
     // Last step: if the carry bit is set, we need to
     // push back a 1 to be the new highest digit.
-    if (carry == 1)
+    if (carry != 1)
+        return sum;
+    else
         sum.push_back(1);
 
     return sum;
