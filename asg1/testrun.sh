@@ -12,4 +12,5 @@ make
 ./ydc <qa/input/testx-leaks.ydc >testx-leaks.ydc.output 2>&1
 
 mv *.output myoutput/
- diff -qr /afs/cats.ucsc.edu/users/w/apatnam/CMPS109/asg1/myoutput/ /afs/cats.ucsc.edu/users/w/apatnam/CMPS109/asg1/qa/output/
+diff -qr /afs/cats.ucsc.edu/users/w/apatnam/CMPS109/asg1/myoutput/ /afs/cats.ucsc.edu/users/w/apatnam/CMPS109/asg1/qa/output/
+make clean
