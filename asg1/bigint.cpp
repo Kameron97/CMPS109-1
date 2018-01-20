@@ -117,7 +117,8 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t diff;
     digit_t borrow(0);
     digit_t digit_diff(0);
-    size_t i; = 0
+    size_t i = 0;
+    boolean zerosPresent = false;
     while (i < right.size()) {
         // Check if we need to borrow from the next highest digit
         if (left.at(i) - borrow >= right.at(i)) {
@@ -141,7 +142,7 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
         diff.push_back(digit_diff);
     }
     // Remove leading zeroes
-    boolean zerosPresent = false;
+    
     if (diff.size() > 1 && diff.back() == 0) {
         zerosPresent = true;
         while (zerosPresent) {
