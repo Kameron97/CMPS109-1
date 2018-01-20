@@ -142,13 +142,10 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
         diff.push_back(digit_diff);
     }
     // Remove leading zeroes
-    bool zerosPresent = false;
-    if (diff.size() > 1 && diff.back() == 0) {
-        zerosPresent = true;
-        while (zerosPresent) {
-             diff.pop_back();
-        }
-    }
+    do {
+        diff.pop_back();
+    } while ()diff.size() > 1 && diff.back() == 0
+ 
        
     return diff;
 }
