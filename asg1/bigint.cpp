@@ -60,21 +60,23 @@ void bigint::init (const string& that) {
 bigvalue_t do_bigadd (const bigvalue_t& left, 
                       const bigvalue_t& right) {
     bigvalue_t sum;
+    
+    size_t min_size = min(left.size(), right.size());
+    size_t i = 0;
     digit_t carry(0);
     digit_t digit_sum(0);
-    size_t min_size = min(left.size(), right.size());
-    size_t i;
-    for (i = 0; i < min_size; i++) {
+    while (i < min_size) {
         // Compute digit sum. If greater than 9, take note
         // with the carry bit and deduct 10 from the sum.
         digit_sum = left.at(i) + right.at(i) + carry;
-        if (digit_sum > 9) {
+        if (digit_sum <= 9) {
+            carry = 0;
+        } else {
             carry = 1;
             digit_sum -= 10;
-        } else {
-            carry = 0;
         }
         sum.push_back(digit_sum);
+        i++;
     }
     while (i < left.size()) {
         digit_sum = left.at(i) + carry;
