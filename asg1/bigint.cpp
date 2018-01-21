@@ -354,17 +354,20 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     }
 
     bigvalue_t dq_copy(dq);
-    while (dq_copy.size() <= m)
+    for (;dq_copy.size() <= m;) {
         dq_copy.push_back(0);
+    }
 
-    i = m;
     j = 0;
-    while (i != j)
-        if (r_copy.at(i + k) != dq_copy.at(i))
-            j = i;
-        else
-            i = i - 1;
-
+    i = m;
+    
+    while (i != j) {
+        if (r_copy.at(i + k) == dq_copy.at(i)) {
+            i = i - 1;           
+        } else {
+           j = i;
+        } 
+    }
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
