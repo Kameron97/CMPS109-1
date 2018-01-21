@@ -455,7 +455,7 @@ bool operator== (const bigint& left, const bigint& right) {
         return false;
     }
     size_t i = 0;
-    while (i < left.big_value.size() {
+    while (i < left.big_value.size()) {
         if (left.big_value.at(i) != right.big_value.at(i)) {
             return false;
         }
