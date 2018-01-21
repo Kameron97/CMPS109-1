@@ -415,21 +415,17 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
     return make_pair(bigint(q), bigint(partial_quot(r,f)));
 }
 
-// Main division function. Checks for corner cases and then calls
-// longdiv(x, y, x.size(), y.size()) if necessary.
 bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
-    DEBUGF ('/', "divide(" << x << ", " << y << ")")
-    int n, m, y1;
-    m = y.size();
-    if (m == 1) {
-        y1 = y.at(m - 1);
-        return make_pair(bigint(partial_quot(x, y1)),
-                         bigint(partial_rem(x, y1)));
-    } else {
+    int n, y1; 
+    int m = y.size();
+    if (m != 1) {
         n = x.size();
         if (m > n)
             return make_pair(bigint(0), x);
         return longdiv(x, y, n, m);
+    } else {
+        y1 = y.at(m - 1);
+        return make_pair(bigint(partial_quot(x, y1)), bigint(partial_rem(x, y1)));
     }
 }
 
