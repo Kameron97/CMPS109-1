@@ -387,11 +387,15 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_
 }
 
 bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
-    bigvalue_t d = partial_prod(y, f), dq, q(n, 0), r = partial_prod(x, f); 
+    DEBUGF ('/', "longdiv(" << x << ", " << y << ", " <<
+                (int) n << ", " << (int) m << ")")
+    bigvalue_t d, dq, q(n, 0), r;
+    int f, qt;
     int k;
-    int f = 10 / (y.at(m - 1) + 1);
-    int qt;
 
+    f = 10 / (y.at(m - 1) + 1);
+    r = partial_prod(x, f);
+    d = partial_prod(y, f);
     for (k = n - m; k >= 0; k--) {
         qt = trialdigit(r, d, k, m);
         dq = partial_prod(d, qt);
