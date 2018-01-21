@@ -311,13 +311,13 @@ bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
 }
 
 bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
-    int carry;
+    int carry = 0;
     size_t size = x.size();
-    carry = 0;
-    for (size_t i = size - 1; i < size; i--) {
+    size_t i = size - 1;
+    while (i < size) {
         carry = (x.at(i) + 10 * carry) % k;
+        i--;
     }
-    // Since k is a digit, the remainder must also be a digit
     DEBUGF ('/', "partial_rem(" << x << ", " 
                  << k << ") = " << carry)
     return bigvalue_t(1, carry);
