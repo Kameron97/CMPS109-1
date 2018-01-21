@@ -182,11 +182,7 @@ bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
 
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint sum;
-    if (left.negative == right.negative) {
-        sum.big_value = do_bigadd(left.big_value, right.big_value);
-        sum.negative = left.negative;
-        return sum;
-    } else {
+    if (left.negative != right.negative) {
         if (do_bigless(left.big_value, right.big_value)) {
             sum.big_value = do_bigsub(right.big_value, left.big_value);
             sum.negative = right.negative;
@@ -195,6 +191,10 @@ bigint operator+ (const bigint& left, const bigint& right) {
             sum.negative = left.negative;
         }
         return sum;
+    } else {        
+        sum.big_value = do_bigadd(left.big_value, right.big_value);
+        sum.negative = left.negative;
+        return sum;      
     }
 }
 
