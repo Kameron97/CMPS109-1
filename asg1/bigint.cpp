@@ -494,19 +494,26 @@ ostream& operator<< (ostream& out, const bigint& that) {
 
 ostream& operator<< (ostream& out, const bigvalue_t& that) {
     size_t i = 0;
-    for (auto rit  = that.crbegin();
-            rit != that.crend();
-            ++rit) {
+    auto rit = that.crbegin();
+
+    while (rit != that.crend()) {
         out << (int) *rit;
         i++;
         if (i == LINE_LIMIT) {
             out << "\\" << endl;
             i = 0;
         }
+        ++rit;
     }
     return out;
 }
 
+long bigint::to_long() const {
+    if (*this <= bigint (numeric_limits<long>::min())
+            or *this > bigint (numeric_limits<long>::max()))
+        throw range_error ("bigint__to_long: out of range");
+    return long_value;
+}
 
 
 bigint pow (const bigint& base, const bigint& exponent) {
