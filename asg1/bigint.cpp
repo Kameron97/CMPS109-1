@@ -159,13 +159,18 @@ bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
         return true;
 
     // iterate from highest order digits to find smaller input
-    auto lit = left.crbegin();
+
     auto rit = right.crbegin();
-    for (; lit != left.crend(); lit++, rit++)
-        if (*lit < *rit)
-            return true;
-        else if (*lit > *rit)
+    auto lit = left.crbegin();
+    
+    while (lit != left.crend()) {
+        if (*lit > *rit)
             return false;
+        else 
+            return false;
+        lit++; 
+        rit++;
+    }
 
     // in this case they are equal
     return false;
