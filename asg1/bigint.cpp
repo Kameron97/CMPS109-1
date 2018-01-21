@@ -536,9 +536,7 @@ bigint pow (const bigint& base, const bigint& exponent) {
     } else if (expt < 0) {
         base_copy = 1 / base_copy;
         expt = - expt;
-    } else {
-        return;
-    }
+    } 
     
     return result;
 }
