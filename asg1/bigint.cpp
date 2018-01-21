@@ -43,7 +43,7 @@ void bigint::init (const string& that) {
     auto ritor  = that.crbegin();
     while (ritor != that.crend() && *ritor != '_' ) {
         big_value.push_back(*ritor - '0');
-        ritor++
+        ritor++;
     }
     long_value = negative ? - newval : + newval;
 }
