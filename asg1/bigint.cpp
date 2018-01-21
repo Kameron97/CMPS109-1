@@ -346,16 +346,12 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
 
 // Returns r[k ... k + m] < dq 
 // (Note dq = dq[m ... 0])
-bool smaller(const bigvalue_t& r, const bigvalue_t& dq,
-                size_t k, size_t m) {
-    DEBUGF ('/', "smaller(" << r << ", " << dq << ", " <<
-                (int) k << ", " << (int) m << ")")
+bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     int i, j;
-
-    // Add leading zeroes if necessary, to make comparison easier
     bigvalue_t r_copy(r);
-    while (r_copy.size() <= m + k)
+    for (;r_copy.size() <= m + k;) {
         r_copy.push_back(0);
+    }
 
     bigvalue_t dq_copy(dq);
     while (dq_copy.size() <= m)
@@ -372,10 +368,7 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq,
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
-// Returns r - dq * 10^k, corresponding to the long divison step of
-// subtracting from the high order digits of the current remainder.
-bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq,
-                      size_t k, size_t m) {
+bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     bigvalue_t dq_shifted;
     // Do the multiplication locally, since it is trivial
     for (size_t i = 0; i < k; i++)
