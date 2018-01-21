@@ -519,7 +519,8 @@ long bigint::to_long() const {
 // Implementation of the power operation. Not overloading because
 // we require that the exponent be able to fit inside a long.
 bigint pow (const bigint& base, const bigint& exponent) {
-    if (base == 0) return 0;
+    if (base == 0) 
+        return 0;
     bigint base_copy = base;
     long expt = exponent.to_long();
     bigint result = 1;
