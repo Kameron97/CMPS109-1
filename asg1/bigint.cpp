@@ -316,8 +316,6 @@ bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
         carry = (x.at(i) + 10 * carry) % k;
         i--;
     }
-    DEBUGF ('/', "partial_rem(" << x << ", " 
-                 << k << ") = " << carry)
     return bigvalue_t(1, carry);
 }
 
