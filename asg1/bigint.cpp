@@ -465,23 +465,19 @@ bool operator== (const bigint& left, const bigint& right) {
     return true;
 }
 
-// Overloading the less than operator. Checks sign and then will 
-// make call to do_bigless depending on the situation.
 bool operator< (const bigint& left, const bigint& right) {
-    bool retval;
+    bool retval = false;
     if (left.negative) {
-        if (!right.negative)
-            retval = true;
-        else 
+        if (right.negative) 
             retval = do_bigless(right.big_value, left.big_value);
-    } else {
-        if (right.negative)
-            retval = false;
         else 
-            retval = do_bigless(left.big_value, right.big_value);
+            retval = true;
+    } else {
+        if (!right.negative)
+            retval = do_bigless(left.big_value, right.big_value);           
+        else 
+            retval = false;
     }
-    DEBUGF ('l', "operator<(" << left << ", " << right 
-                       << ") = " << retval) 
     return retval;
 }
 
