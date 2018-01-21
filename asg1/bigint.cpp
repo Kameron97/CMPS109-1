@@ -371,7 +371,7 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
-bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k) {
+bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     bigvalue_t dq_shifted;
     size_t i = 0;
     auto it = dq.cbegin();
@@ -402,7 +402,7 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
         DEBUGF ('/', "accessing q(" << (int) k << ")"
                      << "and q has size " << q.size())
         q.at(k) = qt;
-        r = difference(r, dq, k);
+        r = difference(r, dq, k, m);
     }
     while (q.size() > 1 && q.back() == 0)
         q.pop_back();
