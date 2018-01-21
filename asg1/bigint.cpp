@@ -13,18 +13,12 @@ using namespace std;
 #define LINE_LIMIT 69
 
 
-bigint::bigint (const bigvalue_t& that): big_value (that) {
-    DEBUGF ('~', this << " -> " << big_value << " (copy ctor)")
-}
-
 bigint::bigint (long that): long_value (that) {
     init(to_string(that));
-    DEBUGF ('~', this << " -> " << long_value << " (int ctor)")
 }
 
 bigint::bigint (const string& that) {
     init(that);
-    DEBUGF ('~', this << " -> " << big_value << " (string ctor)")
 }
 
 
