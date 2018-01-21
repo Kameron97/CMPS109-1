@@ -57,51 +57,53 @@ void bigint::init (const string& that) {
 
 // Adds two digit vectors. 
 // Same logic as addition by hand.
-bigvalue_t do_bigadd (const bigvalue_t& left, 
-                      const bigvalue_t& right) {
+bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t sum;
+    
+    size_t min_size = min(left.size(), right.size());
+    size_t i = 0;
     digit_t carry(0);
     digit_t digit_sum(0);
-    size_t min_size = min(left.size(), right.size());
-    size_t i;
-    for (i = 0; i < min_size; i++) {
+    while (i < min_size) {
         // Compute digit sum. If greater than 9, take note
         // with the carry bit and deduct 10 from the sum.
         digit_sum = left.at(i) + right.at(i) + carry;
-        if (digit_sum > 9) {
+        if (digit_sum <= 9) {
+            carry = 0;
+        } else {
             carry = 1;
             digit_sum -= 10;
-        } else {
-            carry = 0;
         }
         sum.push_back(digit_sum);
+        i++;
     }
-    while (i < left.size()) {
+    for (; i < left.size(); i++) {
         digit_sum = left.at(i) + carry;
-        if (digit_sum > 9) {
+        if (digit_sum <= 9) {   
+            carry = 0;
+        } else {
             carry = 1;
             digit_sum -= 10;
-        } else {
-            carry = 0;
         }
         sum.push_back(digit_sum);
-        i++;
     }
-    while (i < right.size()) {
+    for (; i < right.size(); i++) {
         digit_sum = right.at(i) + carry;
-        if (digit_sum > 9) {
-            carry = 1;
-            digit_sum -= 10;
-        } else {
+        if (digit_sum <= 9) {         
             carry = 0;
+        } else {
+              carry = 1;
+            digit_sum -= 10;
         }
         sum.push_back(digit_sum);
-        i++;
+        
     }
 
     // Last step: if the carry bit is set, we need to
     // push back a 1 to be the new highest digit.
-    if (carry == 1)
+    if (carry != 1)
+        return sum;
+    else
         sum.push_back(1);
 
     return sum;
@@ -111,58 +113,64 @@ bigvalue_t do_bigadd (const bigvalue_t& left,
 // Same logic as subtraction by hand. 
 // Precondition:  left >= right
 // Postcondition: result >= 0
-bigvalue_t do_bigsub (const bigvalue_t& left, 
-                      const bigvalue_t& right) {
+bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t diff;
     digit_t borrow(0);
     digit_t digit_diff(0);
-    size_t i;
-    for (i = 0; i < right.size(); i++) {
+    size_t i = 0;
+    
+    while (i < right.size()) {
         // Check if we need to borrow from the next highest digit
-        if (left.at(i) - borrow < right.at(i)) {
-            digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
-            borrow = 1;
-        } else {
+        if (left.at(i) - borrow >= right.at(i)) {
             digit_diff = left.at(i) - right.at(i) - borrow;
             borrow = 0;
-        }
-        diff.push_back(digit_diff);
-    }
-    while (i < left.size()) {
-        if (left.at(i) < borrow) {
-            digit_diff = 10 + left.at(i) - borrow; 
-            borrow = 1;
         } else {
-            digit_diff = left.at(i) - borrow;
-            borrow = 0;
+            digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
+            borrow = 1;
         }
         diff.push_back(digit_diff);
         i++;
     }
+    for (; i < left.size(); i++) {
+        if (left.at(i) >= borrow) {        
+            digit_diff = left.at(i) - borrow;
+            borrow = 0;
+        } else {
+            digit_diff = 10 + left.at(i) - borrow; 
+            borrow = 1;
+        }
+        diff.push_back(digit_diff);
+    }
     // Remove leading zeroes
+        
     while (diff.size() > 1 && diff.back() == 0)
         diff.pop_back();
+ 
+       
     return diff;
 }
 
 // Returns true if left < right, assumes both are positive
 // integers.
-bool do_bigless (const bigvalue_t& left,
-                 const bigvalue_t& right) {
-    // if the vectors' sizes differ the answer is trivial
-    if (left.size() < right.size())
-        return true;
-    else if (left.size() > right.size())
+bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
+    if (left.size() > right.size())
         return false;
+    else 
+        return true;
 
     // iterate from highest order digits to find smaller input
-    auto lit = left.crbegin();
+
     auto rit = right.crbegin();
-    for (; lit != left.crend(); lit++, rit++)
-        if (*lit < *rit)
-            return true;
-        else if (*lit > *rit)
+    auto lit = left.crbegin();
+    
+    while (lit != left.crend()) {
+        if (*lit > *rit)
             return false;
+        else 
+            return true;
+        lit++; 
+        rit++;
+    }
 
     // in this case they are equal
     return false;
@@ -174,11 +182,7 @@ bool do_bigless (const bigvalue_t& left,
 
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint sum;
-    if (left.negative == right.negative) {
-        sum.big_value = do_bigadd(left.big_value, right.big_value);
-        sum.negative = left.negative;
-        return sum;
-    } else {
+    if (left.negative != right.negative) {
         if (do_bigless(left.big_value, right.big_value)) {
             sum.big_value = do_bigsub(right.big_value, left.big_value);
             sum.negative = right.negative;
@@ -187,6 +191,10 @@ bigint operator+ (const bigint& left, const bigint& right) {
             sum.negative = left.negative;
         }
         return sum;
+    } else {        
+        sum.big_value = do_bigadd(left.big_value, right.big_value);
+        sum.negative = left.negative;
+        return sum;      
     }
 }
 
@@ -283,50 +291,36 @@ bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
 
 bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
     int temp, carry;
-    size_t size = x.size();
+    
     bigvalue_t quotient(x.size(), 0);
     carry = 0;
-    for (size_t i = size - 1; i < size; i--) {
+    size_t size = x.size();
+    size_t i = size - 1;
+    while (i < size) {
         temp = x.at(i) + 10 * carry;
         quotient.at(i) = temp / k;
         carry = temp % k;
+        i--;
     }
-    while (quotient.size() > 1 && quotient.back() == 0)
+    while (quotient.size() > 1 && quotient.back() == 0) {
         quotient.pop_back();
-    DEBUGF ('/', "partial_quot(" << x << ", " 
-                 << k << ") = " << quotient)
+    }
     return quotient;
 }
 
 bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
-    int carry;
+    int carry = 0;
     size_t size = x.size();
-    carry = 0;
-    for (size_t i = size - 1; i < size; i--) {
+    size_t i = size - 1;
+    while (i < size) {
         carry = (x.at(i) + 10 * carry) % k;
+        i--;
     }
-    // Since k is a digit, the remainder must also be a digit
-    DEBUGF ('/', "partial_rem(" << x << ", " 
-                 << k << ") = " << carry)
     return bigvalue_t(1, carry);
 }
 
-//
-// The computation of a quotient digit q_k breaks down into the
-// simpler prefix operations. The assignment
-//          q_t = trialdigit(r, d, k, m)
-// defines a trial digit, q_t = q_e, which is an inital estimate
-// of q_k. The operands of the trial digit function are prefixes
-// of the remainder r and the divisor d
-//      r[k + m - 2 ... k + m]    d[m - 1 ... m - 2]
-// where
-//          2 <= m <= k + m
-//
 
-digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
-                   size_t k, size_t m) {
-    DEBUGF ('/', "trialdigit(" << r << ", " << d << ", " << 
-                 (int) k << ", " << (int) m << ")") 
+digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m) {
     int d2, r3;
     size_t km;
     km = k + m;
@@ -346,74 +340,53 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
     else
         d2 = 0;
 
-    DEBUGF ('/', "trialdigit = " << min(r3 / d2, 9))
     return min(r3 / d2, 9);
 }
 
 
 // Returns r[k ... k + m] < dq 
 // (Note dq = dq[m ... 0])
-bool smaller(const bigvalue_t& r, const bigvalue_t& dq,
-                size_t k, size_t m) {
-    DEBUGF ('/', "smaller(" << r << ", " << dq << ", " <<
-                (int) k << ", " << (int) m << ")")
+bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     int i, j;
-
-    // Add leading zeroes if necessary, to make comparison easier
     bigvalue_t r_copy(r);
-    while (r_copy.size() <= m + k)
+    for (;r_copy.size() <= m + k;) {
         r_copy.push_back(0);
+    }
 
     bigvalue_t dq_copy(dq);
-    while (dq_copy.size() <= m)
+    for (;dq_copy.size() <= m;) {
         dq_copy.push_back(0);
+    }
 
-    i = m;
     j = 0;
-    while (i != j)
-        if (r_copy.at(i + k) != dq_copy.at(i))
-            j = i;
-        else
-            i = i - 1;
-
+    i = m;
+    
+    while (i != j) {
+        if (r_copy.at(i + k) == dq_copy.at(i)) {
+            i = i - 1;           
+        } else {
+           j = i;
+        } 
+    }
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
-// Returns r - dq * 10^k, corresponding to the long divison step of
-// subtracting from the high order digits of the current remainder.
-bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq,
-                      size_t k, size_t m) {
+bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     bigvalue_t dq_shifted;
-    // Do the multiplication locally, since it is trivial
-    for (size_t i = 0; i < k; i++)
+    size_t i = 0;
+    auto it = dq.cbegin();
+    while (i < k) {
         dq_shifted.push_back(0);
-    for (auto it = dq.cbegin(); it != dq.cend(); it++)
+        i++;
+    }
+    while (it != dq.cend()) {
         dq_shifted.push_back(*it);
-
-    DEBUGF ('/', "difference(" << r << ", " << dq << ", " <<
-                (int) k << ", " << (int) m << ")" << " = " 
-                << do_bigsub (r, dq_shifted))
-
+        it++;
+    }
     return do_bigsub (r, dq_shifted); 
 }
 
-// Auxiliary function used by divide(x, y). The call to divide
-// checks for the simple cases where x < y or y.size() == 1.
-//
-// If neither of those cases apply, this function is called. 
-// n and m are the size of x and y, respectively.
-//
-// The procedure mainly works by estimating the quotient digits,
-// correcting as necessary, and then subtracting the most recently
-// computed quotient digit (scaled to the apropriate power of 10)
-// from the current remainder.
-//
-// There is also a scaling step that reduces the expected number
-// of digit corrections.
-//
-// See the referenced paper for a full description of the algorithm.
-bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
-                      size_t n, size_t m) {
+bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
     DEBUGF ('/', "longdiv(" << x << ", " << y << ", " <<
                 (int) n << ", " << (int) m << ")")
     bigvalue_t d, dq, q(n, 0), r;
