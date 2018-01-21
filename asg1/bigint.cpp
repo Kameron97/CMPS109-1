@@ -152,13 +152,11 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
 
 // Returns true if left < right, assumes both are positive
 // integers.
-bool do_bigless (const bigvalue_t& left,
-                 const bigvalue_t& right) {
-    // if the vectors' sizes differ the answer is trivial
-    if (left.size() < right.size())
-        return true;
-    else if (left.size() > right.size())
+bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
+    if (left.size() > right.size())
         return false;
+    else 
+        return true;
 
     // iterate from highest order digits to find smaller input
     auto lit = left.crbegin();
