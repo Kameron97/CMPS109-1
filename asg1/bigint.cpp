@@ -291,16 +291,20 @@ bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
 
 bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
     int temp, carry;
-    size_t size = x.size();
+    
     bigvalue_t quotient(x.size(), 0);
     carry = 0;
-    for (size_t i = size - 1; i < size; i--) {
+    size_t size = x.size();
+    size_t i = size - 1;
+    while (i < size) {
         temp = x.at(i) + 10 * carry;
         quotient.at(i) = temp / k;
         carry = temp % k;
+        i--;
     }
-    while (quotient.size() > 1 && quotient.back() == 0)
+    while (quotient.size() > 1 && quotient.back() == 0) {
         quotient.pop_back();
+    }
     DEBUGF ('/', "partial_quot(" << x << ", " 
                  << k << ") = " << quotient)
     return quotient;
