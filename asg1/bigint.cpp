@@ -450,17 +450,17 @@ bigint operator% (const bigint& left, const bigint& right) {
     return result;
 }
 
-// Overloading the equality operator. Checks sizes and signs, and if
-// necessary it steps through the digits to determine equality.
 bool operator== (const bigint& left, const bigint& right) {
-    if (left.negative != right.negative)
+    if (left.negative != right.negative || left.big_value.size() != right.big_value.size()) {
         return false;
-    if (left.big_value.size() != right.big_value.size())
-        return false;
-
-    for (size_t i = 0; i < left.big_value.size(); i++) 
-        if (left.big_value.at(i) != right.big_value.at(i))
+    }
+    size_t i = 0;
+    while (i < left.big_value.size() {
+        if (left.big_value.at(i) != right.big_value.at(i)) {
             return false;
+        }
+        i++;
+    }
 
     return true;
 }
