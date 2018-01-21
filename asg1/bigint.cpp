@@ -371,7 +371,7 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     return r_copy.at(i + k) < dq_copy.at(i);
 }
 
-bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
+bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k) {
     bigvalue_t dq_shifted;
     size_t i = 0;
     auto it = dq.cbegin();
@@ -386,32 +386,12 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_
     return do_bigsub (r, dq_shifted); 
 }
 
-// Auxiliary function used by divide(x, y). The call to divide
-// checks for the simple cases where x < y or y.size() == 1.
-//
-// If neither of those cases apply, this function is called. 
-// n and m are the size of x and y, respectively.
-//
-// The procedure mainly works by estimating the quotient digits,
-// correcting as necessary, and then subtracting the most recently
-// computed quotient digit (scaled to the apropriate power of 10)
-// from the current remainder.
-//
-// There is also a scaling step that reduces the expected number
-// of digit corrections.
-//
-// See the referenced paper for a full description of the algorithm.
-bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
-                      size_t n, size_t m) {
-    DEBUGF ('/', "longdiv(" << x << ", " << y << ", " <<
-                (int) n << ", " << (int) m << ")")
-    bigvalue_t d, dq, q(n, 0), r;
-    int f, qt;
+bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
+    bigvalue_t d = partial_prod(y, f), dq, q(n, 0), r = partial_prod(x, f); 
     int k;
+    int f = 10 / (y.at(m - 1) + 1);
+    int qt;
 
-    f = 10 / (y.at(m - 1) + 1);
-    r = partial_prod(x, f);
-    d = partial_prod(y, f);
     for (k = n - m; k >= 0; k--) {
         qt = trialdigit(r, d, k, m);
         dq = partial_prod(d, qt);
@@ -422,7 +402,7 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
         DEBUGF ('/', "accessing q(" << (int) k << ")"
                      << "and q has size " << q.size())
         q.at(k) = qt;
-        r = difference(r, dq, k, m);
+        r = difference(r, dq, k);
     }
     while (q.size() > 1 && q.back() == 0)
         q.pop_back();
