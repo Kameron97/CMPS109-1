@@ -167,7 +167,7 @@ bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
         if (*lit > *rit)
             return false;
         else 
-            return false;
+            return true;
         lit++; 
         rit++;
     }
