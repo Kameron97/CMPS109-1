@@ -373,16 +373,16 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
 
 bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     bigvalue_t dq_shifted;
-    // Do the multiplication locally, since it is trivial
-    for (size_t i = 0; i < k; i++)
+    size_t i = 0;
+    auto it = dq.cbegin();
+    while (i < k) {
         dq_shifted.push_back(0);
-    for (auto it = dq.cbegin(); it != dq.cend(); it++)
+        i++;
+    }
+    while (it != dq.cend()) {
         dq_shifted.push_back(*it);
-
-    DEBUGF ('/', "difference(" << r << ", " << dq << ", " <<
-                (int) k << ", " << (int) m << ")" << " = " 
-                << do_bigsub (r, dq_shifted))
-
+        it++;
+    }
     return do_bigsub (r, dq_shifted); 
 }
 
