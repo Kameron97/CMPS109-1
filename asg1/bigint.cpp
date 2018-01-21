@@ -451,8 +451,10 @@ bigint operator% (const bigint& left, const bigint& right) {
 }
 
 bool operator== (const bigint& left, const bigint& right) {
-    if (left.negative != right.negative || left.big_value.size() != right.big_value.size()) {
+    if (left.negative == right.negative || left.big_value.size() = right.big_value.size()) {
         return false;
+    } else {
+        return true;
     }
     size_t i = 0;
     while (i < left.big_value.size()) {
