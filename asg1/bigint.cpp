@@ -305,8 +305,6 @@ bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
     while (quotient.size() > 1 && quotient.back() == 0) {
         quotient.pop_back();
     }
-    DEBUGF ('/', "partial_quot(" << x << ", " 
-                 << k << ") = " << quotient)
     return quotient;
 }
 
