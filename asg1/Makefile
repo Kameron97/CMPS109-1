@@ -16,8 +16,8 @@ OBJECTS     = ${CPPSOURCE:.cpp=.o}
 OTHERS      = ${MKFILE} README
 ALLSOURCES  = ${CPPHEADER} ${CPPSOURCE} ${OTHERS}
 
-all : ${EXECBIN}
-	- checksource ${ALLSOURCES}
+#all : ${EXECBIN}
+#	- checksource ${ALLSOURCES}
 
 ${EXECBIN} : ${OBJECTS}
 	${COMPILECPP} -o $@ ${OBJECTS}
