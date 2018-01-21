@@ -30,18 +30,20 @@ bigint::bigint (const string& that) {
 void bigint::init (const string& that) {
     negative = false;
     auto itor = that.cbegin();
-    if (itor != that.cend() and (*itor == '_' || *itor == '-')) {
-        negative = true;
-        ++itor;
+    if (itor != that.cend()) {
+        if (*itor == '_' || *itor == '-')) {
+            negative = true;
+            ++itor;
+        }
     }
     int newval = 0;
-    while (itor != that.end()) {
+    for (; itor != that.end() ;) {
         newval = newval * 10 + *itor++ - '0';
     }
-    for (auto ritor  = that.crbegin(); 
-            ritor != that.crend() && *ritor != '_';
-            ritor++) {
+    auto ritor  = that.crbegin();
+    while (ritor != that.crend() && *ritor != '_'; ) {
         big_value.push_back(*ritor - '0');
+        ritor++
     }
     long_value = negative ? - newval : + newval;
 }
