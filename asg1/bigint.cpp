@@ -319,33 +319,28 @@ bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
     return bigvalue_t(1, carry);
 }
 
-//
-// The computation of a quotient digit q_k breaks down into the
-// simpler prefix operations. The assignment
-//          q_t = trialdigit(r, d, k, m)
-// defines a trial digit, q_t = q_e, which is an inital estimate
-// of q_k. The operands of the trial digit function are prefixes
-// of the remainder r and the divisor d
-//      r[k + m - 2 ... k + m]    d[m - 1 ... m - 2]
-// where
-//          2 <= m <= k + m
-//
 
-digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
-                   size_t k, size_t m) {
-    DEBUGF ('/', "trialdigit(" << r << ", " << d << ", " << 
-                 (int) k << ", " << (int) m << ")") 
+digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m) {
     int d2, r3;
-    size_t km;
-    km = k + m;
+    size_t km = k + m;
     if (r.size() > km)
-        r3 = (r.at(km)*10 + r.at(km - 1))*10 + r.at(km - 2);
+        r3 = (r.at(km)*10 + r.at(km - 1)) * 10 + r.at(km - 2);
     else if (r.size() > km - 1)
-        r3 = r.at(km - 1)*10 + r.at(km - 2);
+        
     else if (r.size() > km - 2)
         r3 = r.at(km - 2);
     else
+        
+
+    if (r.size() > km - 1) {
+        r3 = r.at(km - 1)*10 + r.at(km - 2);
+    } else if (r.size() > km - 2) {
+        r3 = r.at(km - 2);
+    } else if (r.size() > km) {
+        r3 = (r.at(km)*10 + r.at(km - 1)) * 10 + r.at(km - 2);
+    } else {
         r3 = 0;
+    }
 
     if (d.size() > m - 1)
         d2 = d.at(m - 1)*10 + d.at(m - 2);
@@ -354,7 +349,6 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d,
     else
         d2 = 0;
 
-    DEBUGF ('/', "trialdigit = " << min(r3 / d2, 9))
     return min(r3 / d2, 9);
 }
 
