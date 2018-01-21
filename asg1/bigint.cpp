@@ -507,17 +507,8 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
     return out;
 }
 
-// Tries to convert the bigint to a long and fails if out of range
-long bigint::to_long() const {
-    DEBUGF ('^', "this.long_value = " << long_value);
-    if (*this <= bigint (numeric_limits<long>::min())
-            or *this > bigint (numeric_limits<long>::max()))
-        throw range_error ("bigint__to_long: out of range");
-    return long_value;
-}
 
-// Implementation of the power operation. Not overloading because
-// we require that the exponent be able to fit inside a long.
+
 bigint pow (const bigint& base, const bigint& exponent) {
     if (base != 0) {
         bigint base_copy = base;
