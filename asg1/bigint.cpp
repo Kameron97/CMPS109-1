@@ -31,7 +31,7 @@ void bigint::init (const string& that) {
     negative = false;
     auto itor = that.cbegin();
     if (itor != that.cend()) {
-        if (*itor == '_' || *itor == '-')) {
+        if (*itor == '_' || *itor == '-') {
             negative = true;
             ++itor;
         }
@@ -41,7 +41,7 @@ void bigint::init (const string& that) {
         newval = newval * 10 + *itor++ - '0';
     }
     auto ritor  = that.crbegin();
-    while (ritor != that.crend() && *ritor != '_'; ) {
+    while (ritor != that.crend() && *ritor != '_' ) {
         big_value.push_back(*ritor - '0');
         ritor++
     }
