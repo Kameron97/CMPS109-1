@@ -12,7 +12,6 @@ using namespace std;
 
 #define LINE_LIMIT 69
 
-// Constructors
 
 bigint::bigint (const bigvalue_t& that): big_value (that) {
     DEBUGF ('~', this << " -> " << big_value << " (copy ctor)")
@@ -28,13 +27,7 @@ bigint::bigint (const string& that) {
     DEBUGF ('~', this << " -> " << big_value << " (string ctor)")
 }
 
-// Initialization method
-// Takes a string representing a number and instantiates the
-// bigvalue_t vector with the corresponding digits.
-// 
-// The input can indicate negativity via '_' (if it comes from
-// the user input) or '-' (if it comes from the to_string method
-// when the bigint(long) construtor is used)
+
 
 void bigint::init (const string& that) {
     negative = false;
@@ -55,8 +48,7 @@ void bigint::init (const string& that) {
     long_value = negative ? - newval : + newval;
 }
 
-// Adds two digit vectors. 
-// Same logic as addition by hand.
+
 bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t sum;
     
@@ -65,8 +57,6 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     digit_t carry(0);
     digit_t digit_sum(0);
     while (i < min_size) {
-        // Compute digit sum. If greater than 9, take note
-        // with the carry bit and deduct 10 from the sum.
         digit_sum = left.at(i) + right.at(i) + carry;
         if (digit_sum <= 9) {
             carry = 0;
@@ -98,9 +88,6 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
         sum.push_back(digit_sum);
         
     }
-
-    // Last step: if the carry bit is set, we need to
-    // push back a 1 to be the new highest digit.
     if (carry != 1)
         return sum;
     else
@@ -109,10 +96,6 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     return sum;
 }
 
-// Subtracts two digit vectors. 
-// Same logic as subtraction by hand. 
-// Precondition:  left >= right
-// Postcondition: result >= 0
 bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t diff;
     digit_t borrow(0);
@@ -120,7 +103,7 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     size_t i = 0;
     
     while (i < right.size()) {
-        // Check if we need to borrow from the next highest digit
+        
         if (left.at(i) - borrow >= right.at(i)) {
             digit_diff = left.at(i) - right.at(i) - borrow;
             borrow = 0;
@@ -141,7 +124,7 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
         }
         diff.push_back(digit_diff);
     }
-    // Remove leading zeroes
+  
         
     while (diff.size() > 1 && diff.back() == 0)
         diff.pop_back();
@@ -150,15 +133,13 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
     return diff;
 }
 
-// Returns true if left < right, assumes both are positive
-// integers.
+
 bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
     if (left.size() > right.size())
         return false;
     else 
         return true;
 
-    // iterate from highest order digits to find smaller input
 
     auto rit = right.crbegin();
     auto lit = left.crbegin();
@@ -172,13 +153,8 @@ bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
         rit++;
     }
 
-    // in this case they are equal
     return false;
 }
-
-// Overloading the addition and subtraction operators.  
-// Determines proper sign and makes the appropriate call to 
-// do_bigadd or do_bigless.
 
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint sum;
@@ -220,7 +196,6 @@ bigint operator- (const bigint& left, const bigint& right) {
     }
 }
 
-// Overloading the positive and negative unary operators.
 
 bigint operator+ (const bigint& right) {
     bigint pos_bigint(right);
@@ -234,8 +209,6 @@ bigint operator- (const bigint& right) {
     return pos_bigint;
 }
 
-// Multiplies two digit vectors. 
-// Same logic as long multiplication 
 bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
     bigvalue_t product(left.size() + right.size(), 0);
     digit_t c, d;
@@ -261,15 +234,7 @@ bigint operator* (const bigint& left, const bigint& right) {
     return product;
 }
 
-//
-// Long division algorithm.
-//
-// From P. Brinch Hansen,
-// Multiple-length division revisited: A tour of the minefield.
 
-// Partial product, quotient, and remainder assume that
-// x is a multiple length integer and k is a single digit
-// i.e. 0 <= k < 10
 
 bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
     int temp, carry;
@@ -344,8 +309,6 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
 }
 
 
-// Returns r[k ... k + m] < dq 
-// (Note dq = dq[m ... 0])
 bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     int i, j;
     bigvalue_t r_copy(r);
@@ -387,8 +350,6 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_
 }
 
 bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
-    DEBUGF ('/', "longdiv(" << x << ", " << y << ", " <<
-                (int) n << ", " << (int) m << ")")
     bigvalue_t d, dq, q(n, 0), r;
     int f, qt;
     int k;
@@ -403,15 +364,16 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
             qt = qt - 1;
             dq = partial_prod(d, qt);
         }
-        DEBUGF ('/', "accessing q(" << (int) k << ")"
-                     << "and q has size " << q.size())
+
         q.at(k) = qt;
         r = difference(r, dq, k, m);
     }
-    while (q.size() > 1 && q.back() == 0)
-        q.pop_back();
+
     while (r.size() > 1 && r.back() == 0)
         r.pop_back();
+    while (q.size() > 1 && q.back() == 0)
+        q.pop_back();
+   
     return make_pair(bigint(q), bigint(partial_quot(r,f)));
 }
 
