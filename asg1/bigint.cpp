@@ -487,10 +487,11 @@ bool operator< (const bigint& left, const bigint& right) {
 
 ostream& operator<< (ostream& out, const bigint& that) {
     if (!(that.negative) {
-        out << that.big_value;
+         out << '-';
     } else {
-        out << '-';
-    }
+        out << that.big_value;
+    } 
+   
     return out;
 }
 
