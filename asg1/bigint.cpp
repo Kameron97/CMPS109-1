@@ -433,17 +433,16 @@ bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
     }
 }
 
-// Overloading the division operator. Determines sign of quotient and
-// then calls divide(left, right).
 bigint operator/ (const bigint& left, const bigint& right) {
-    if (right == 0) throw ydc_exn ("ydc: divid by zero");
-    bigint result = divide (left.big_value, right.big_value).first;
-    result.negative = left.negative ^ right.negative;
-    return result;
+    if (right != 0) {
+        bigint result = divide (left.big_value, right.big_value).first;
+        result.negative = left.negative ^ right.negative;
+        return result;
+    } else {
+        throw ydc_exn ("ydc: divid by zero");
+    }  
 }
 
-// Overloading the modulus operator. Determines sign of quotient and
-// then calls divide(left, right).
 bigint operator% (const bigint& left, const bigint& right) {
     bigint result = divide (left.big_value, right.big_value).second;
     result.negative = left.negative ^ right.negative;
