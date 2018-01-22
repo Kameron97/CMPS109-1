@@ -309,10 +309,9 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
 
 
 bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
-    int i, j;
-    bigvalue_t r_copy(r);
-    for (;r_copy.size() <= m + k;) {
-        r_copy.push_back(0);
+    bigvalue_t copy(r);
+    for (;copy.size() <= m + k;) {
+        copy.push_back(0);
     }
 
     bigvalue_t dq_copy(dq);
@@ -320,32 +319,32 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
         dq_copy.push_back(0);
     }
 
-    j = 0;
-    i = m;
+    int j = 0;
+    int i = m;
     
     while (i != j) {
-        if (r_copy.at(i + k) == dq_copy.at(i)) {
+        if (copy.at(i + k) == dq_copy.at(i)) {
             i = i - 1;           
         } else {
            j = i;
         } 
     }
-    return r_copy.at(i + k) < dq_copy.at(i);
+    return copy.at(i + k) < dq_copy.at(i);
 }
 
 bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
-    bigvalue_t dq_shifted;
+    bigvalue_t shift;
     size_t i = 0;
-    auto it = dq.cbegin();
+    
     while (i < k) {
-        dq_shifted.push_back(0);
+        shift.push_back(0);
         i++;
     }
-    while (it != dq.cend()) {
-        dq_shifted.push_back(*it);
-        it++;
+    while (dq.cbegin() != dq.cend()) {
+        shift.push_back(*(dq.cbegin()));
+        (dq.cbegin())++;
     }
-    return do_bigsub (r, dq_shifted); 
+    return do_bigsub (r, shift); 
 }
 
 bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
