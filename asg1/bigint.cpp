@@ -86,12 +86,12 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
         sumAdd.push_back(digSum);
         
     }
-    if (carry != 1)
-        return sum;
+    if (borrow != 1)
+        return sumAdd;
     else
-        sum.push_back(1);
+        sumAdd.push_back(1);
 
-    return sum;
+    return sumAdd;
 }
 
 bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
