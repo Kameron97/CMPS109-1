@@ -95,40 +95,40 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
 }
 
 bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t diff;
+    bigvalue_t diffSub;
     digit_t borrow(0);
-    digit_t digit_diff(0);
+    digit_t digSub(0);
     size_t i = 0;
     
     while (i < right.size()) {
         
         if (left.at(i) - borrow >= right.at(i)) {
-            digit_diff = left.at(i) - right.at(i) - borrow;
+            digSub = left.at(i) - right.at(i) - borrow;
             borrow = 0;
         } else {
-            digit_diff = 10 + left.at(i) - right.at(i) - borrow; 
+            digSub = 10 + left.at(i) - right.at(i) - borrow; 
             borrow = 1;
         }
-        diff.push_back(digit_diff);
+        diffSub.push_back(digSub);
         i++;
     }
     for (; i < left.size(); i++) {
         if (left.at(i) >= borrow) {        
-            digit_diff = left.at(i) - borrow;
+            digSub = left.at(i) - borrow;
             borrow = 0;
         } else {
-            digit_diff = 10 + left.at(i) - borrow; 
+            digSub = 10 + left.at(i) - borrow; 
             borrow = 1;
         }
-        diff.push_back(digit_diff);
+        diffSub.push_back(digSub);
     }
   
         
-    while (diff.size() > 1 && diff.back() == 0)
-        diff.pop_back();
+    while (diffSub.size() > 1 && diffSub.back() == 0)
+        diffSub.pop_back();
  
        
-    return diff;
+    return diffSub;
 }
 
 
