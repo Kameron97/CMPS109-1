@@ -215,7 +215,7 @@ bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
         count = 0;
         for (size_t j = 0; j < right.size(); j++) {
             dInc = prod.at(i+j) + (left.at(i) * right.at(j)) + count;
-            prod.at(i+j) = d % 10;
+            prod.at(i+j) = dInc % 10;
             count = dInc / 10;
         }
         prod.at(i + right.size()) = count;
