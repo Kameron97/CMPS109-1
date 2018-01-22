@@ -364,7 +364,7 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
         }
 
         qtr.at(kInc) = qInc;
-        r = difference(rInc, dInc2, kInc, m);
+        rInc = difference(rInc, dInc2, kInc, m);
     }
 
     while (rInc.size() > 1 && rInc.back() == 0)
