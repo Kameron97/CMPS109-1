@@ -447,27 +447,27 @@ ostream& operator<< (ostream& out, const bigint& that) {
 
 ostream& operator<< (ostream& out, const bigvalue_t& that) {
     size_t i = 0;
-    auto rit = that.crbegin();
+    auto r = that.crbegin();
 
-    while (rit != that.crend()) {
-        out << (int) *rit;
+    while (r != that.crend()) {
+        out << (int) *r;
         i++;
         if (i == LINE_LIMIT) {
             out << "\\" << endl;
             i = 0;
         }
-        ++rit;
+        ++r;
     }
     return out;
 }
 
 long bigint::to_long() const {
-    if (*this > bigint (numeric_limits<long>::min())) {
-        if (*this <= bigint (numeric_limits<long>::max())) {
+    if (*this > bigint (limit<long>::min())) {
+        if (*this <= bigint (limit<long>::max())) {
             return long_value;
         }
     } else {
-        throw range_error ("bigint__to_long: out of range");
+        throw range_error ("Out of range");
     }
     
     
