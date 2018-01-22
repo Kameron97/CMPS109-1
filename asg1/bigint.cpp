@@ -463,7 +463,7 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
 
 long bigint::to_long() const {
     if (*this > bigint (limit<long>::min())) {
-        if (*this <= bigint (limit<long>::max())) {
+        if (*this <= bigint (numeric_limits<long>::max())) {
             return long_value;
         }
     } else {
@@ -476,25 +476,24 @@ long bigint::to_long() const {
 
 bigint pow (const bigint& base, const bigint& exponent) {
     if (base != 0) {
-        bigint base_copy = base;
-        long expt = exponent.to_long();
-        bigint result = 1;
-        if (expt > 0) {
-            for (; expt > 0 ; ) {
-                if (expt & 1) { 
-                    result = result * base_copy;
-                    --expt;
+        bigint copy = base;
+        long power = exponent.to_long();
+        bigint res = 1;
+        if (power > 0) {
+            for (; power > 0 ; ) {
+                if (power & 1) { 
+                    res = res * copy;
+                    --power;
                 } else { 
-                    base_copy = base_copy * base_copy;
-                    expt /= 2;
+                    copy = copy * copy;
+                    power /= 2;
                 }
             }
-        } else if (expt < 0) {
-            base_copy = 1 / base_copy;
-            expt = - expt;
-        } 
-        
-        return result;
+        } else if (power < 0) {
+            copy = 1 / copy;
+            power = - power;
+        }        
+        return res;
     } else {
         return 0;
     }
