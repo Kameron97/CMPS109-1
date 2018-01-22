@@ -19,27 +19,28 @@ class bigint {
     long long_value {};
     bool negative;
     bigintFunc big_value;
+
+
+
     using quot_rem = pair<bigint,bigint>;
     using unumber = unsigned long;
+
+
     friend quot_rem divide (const bigint&, const bigint&);
     friend void multiply_by_2 (unumber&);
     friend void divide_by_2 (unumber&);
-    friend bigintFunc do_bigadd (const bigintFunc&, const bigintFunc&);
-    friend bigintFunc do_bigsub (const bigintFunc&, const bigintFunc&);
-    friend bigintFunc do_bigmul (const bigintFunc&, const bigintFunc&);
-    friend bool do_bigless (const bigintFunc&, const bigintFunc&);
-    friend bigintFunc partial_prod(const bigintFunc&, size_t);
-    friend bigintFunc partial_quot(const bigintFunc&, size_t);
-    friend bigintFunc partial_rem(const bigintFunc&, size_t);
-    friend digitFunc trialdigit(const bigintFunc&, const bigintFunc&,
-                              size_t, size_t);
-    friend bool smaller(const bigintFunc&, const bigintFunc&,
-                        size_t, size_t);
-    friend bigintFunc difference(const bigintFunc&, const bigintFunc&,
-                                 size_t, size_t);
-    friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
-                            size_t n, size_t m);
-    friend quot_rem divide(const bigintFunc& x, const bigintFunc& y);
+    friend bigintFunc bigAdd (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc bigSub (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc bigMult (const bigintFunc&, const bigintFunc&);
+    friend bool bigDiff (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc pprod(const bigintFunc&, size_t);
+    friend bigintFunc pquot(const bigintFunc&, size_t);
+    friend bigintFunc prem(const bigintFunc&, size_t);
+    friend digitFunc testDigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend bool minFinder(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend bigintFunc diff(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y, size_t n, size_t m);
+    friend quot_rem div(const bigintFunc& x, const bigintFunc& y);
   
   
   public:
@@ -47,6 +48,8 @@ class bigint {
     bigint() = default;
     bigint (const bigint&) = default;
     bigint (bigint&&) = default;
+
+
     bigint& operator= (const bigint&) = default;
     bigint& operator= (bigint&&) = default;
     ~bigint() = default;
