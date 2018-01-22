@@ -9,7 +9,7 @@ using namespace std;
 
 #include "debug.h"
 using digit_t = unsigned char;
-using bigvalue_t = vector<digit_t>;
+using bigintFunc = vector<digit_t>;
 
 class bigint {
     friend ostream& operator<< (ostream&, const bigint&);
@@ -17,28 +17,28 @@ class bigint {
     void init (const string&);
     long long_value {};
     bool negative;
-    bigvalue_t big_value;
+    bigintFunc big_value;
     using quot_rem = pair<bigint,bigint>;
     using unumber = unsigned long;
     friend quot_rem divide (const bigint&, const bigint&);
     friend void multiply_by_2 (unumber&);
     friend void divide_by_2 (unumber&);
-    friend bigvalue_t do_bigadd (const bigvalue_t&, const bigvalue_t&);
-    friend bigvalue_t do_bigsub (const bigvalue_t&, const bigvalue_t&);
-    friend bigvalue_t do_bigmul (const bigvalue_t&, const bigvalue_t&);
-    friend bool do_bigless (const bigvalue_t&, const bigvalue_t&);
-    friend bigvalue_t partial_prod(const bigvalue_t&, size_t);
-    friend bigvalue_t partial_quot(const bigvalue_t&, size_t);
-    friend bigvalue_t partial_rem(const bigvalue_t&, size_t);
-    friend digit_t trialdigit(const bigvalue_t&, const bigvalue_t&,
+    friend bigintFunc do_bigadd (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc do_bigsub (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc do_bigmul (const bigintFunc&, const bigintFunc&);
+    friend bool do_bigless (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc partial_prod(const bigintFunc&, size_t);
+    friend bigintFunc partial_quot(const bigintFunc&, size_t);
+    friend bigintFunc partial_rem(const bigintFunc&, size_t);
+    friend digit_t trialdigit(const bigintFunc&, const bigintFunc&,
                               size_t, size_t);
-    friend bool smaller(const bigvalue_t&, const bigvalue_t&,
+    friend bool smaller(const bigintFunc&, const bigintFunc&,
                         size_t, size_t);
-    friend bigvalue_t difference(const bigvalue_t&, const bigvalue_t&,
+    friend bigintFunc difference(const bigintFunc&, const bigintFunc&,
                                  size_t, size_t);
-    friend quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,
+    friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
                             size_t n, size_t m);
-    friend quot_rem divide(const bigvalue_t& x, const bigvalue_t& y);
+    friend quot_rem divide(const bigintFunc& x, const bigintFunc& y);
   public:
 
     bigint() = default;
@@ -48,7 +48,7 @@ class bigint {
     bigint& operator= (bigint&&) = default;
     ~bigint() = default;
 
-    bigint (const bigvalue_t&);
+    bigint (const bigintFunc&);
     bigint (const long);
     bigint (const string&);
 
@@ -70,7 +70,7 @@ class bigint {
 
 
 
-ostream& operator<< (ostream& out, const bigvalue_t& that);
+ostream& operator<< (ostream& out, const bigintFunc& that);
 
 bigint pow (const bigint& base, const bigint& exponent);
 
