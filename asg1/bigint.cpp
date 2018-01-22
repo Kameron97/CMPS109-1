@@ -462,7 +462,7 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
 }
 
 long bigint::to_long() const {
-    if (*this > bigint (limit<long>::min())) {
+    if (*this > bigint (numeric_limits<long>::min())) {
         if (*this <= bigint (numeric_limits<long>::max())) {
             return long_value;
         }
