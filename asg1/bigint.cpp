@@ -287,23 +287,25 @@ bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
 
 digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m) {
     int d2, r3;
-    size_t km;
-    km = k + m;
-    if (r.size() > km)
-        r3 = (r.at(km)*10 + r.at(km - 1))*10 + r.at(km - 2);
-    else if (r.size() > km - 1)
-        r3 = r.at(km - 1)*10 + r.at(km - 2);
-    else if (r.size() > km - 2)
-        r3 = r.at(km - 2);
-    else
-        r3 = 0;
+    size_t km = k + m;
 
-    if (d.size() > m - 1)
+    if (r.size() > km) {
+        r3 = (r.at(km)*10 + r.at(km - 1))*10 + r.at(km - 2);
+    } if (r.size() > km - 1) {
+        r3 = r.at(km - 1)*10 + r.at(km - 2);
+    } if (r.size() > km - 2) {
+        r3 = r.at(km - 2);
+    } else {
+        r3 = 0;
+    }
+
+    if (d.size() > m - 1) {
         d2 = d.at(m - 1)*10 + d.at(m - 2);
-    else if (d.size() > m - 2)
+    } else if (d.size() > m - 2) {
         d2 = d.at(m - 2);
-    else
+    } else {
         d2 = 0;
+    }
 
     return min(r3 / d2, 9);
 }
