@@ -50,21 +50,19 @@ void bigint::init (const string& that) {
 
 
 bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t sum;
-    
-    size_t min_size = min(left.size(), right.size());
+    bigvalue_t sumAdd;
     size_t i = 0;
-    digit_t carry(0);
-    digit_t digit_sum(0);
-    while (i < min_size) {
-        digit_sum = left.at(i) + right.at(i) + carry;
-        if (digit_sum <= 9) {
-            carry = 0;
+    digit_t borrow(0);
+    digit_t digSum(0);
+    while (i < min(left.size(), right.size())) {
+        digSum = left.at(i) + right.at(i) + borrow;
+        if (digSum <= 9) {
+            borrow = 0;
         } else {
-            carry = 1;
-            digit_sum -= 10;
+            borrow = 1;
+            digSum -= 10;
         }
-        sum.push_back(digit_sum);
+        sumAdd.push_back(digSum);
         i++;
     }
     for (; i < left.size(); i++) {
