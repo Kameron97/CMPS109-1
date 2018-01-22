@@ -133,22 +133,23 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
 
 
 bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
-    if (left.size() > right.size())
+    if (left.size() > right.size()) {
         return false;
-    else 
+    } else {
         return true;
+    }
 
-
-    auto rit = right.crbegin();
-    auto lit = left.crbegin();
+    auto r = right.crbegin();
+    auto l = left.crbegin();
     
-    while (lit != left.crend()) {
-        if (*lit > *rit)
+    while (l != left.crend()) {
+        if (*l > *r) {
             return false;
-        else 
+        } else { 
             return true;
-        lit++; 
-        rit++;
+        }
+        l++; 
+        r++;
     }
 
     return false;
