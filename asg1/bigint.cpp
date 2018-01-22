@@ -156,20 +156,20 @@ bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
 }
 
 bigint operator+ (const bigint& left, const bigint& right) {
-    bigint sum;
+    bigint bigSum;
     if (left.negative != right.negative) {
         if (do_bigless(left.big_value, right.big_value)) {
-            sum.big_value = do_bigsub(right.big_value, left.big_value);
-            sum.negative = right.negative;
+            bigSum.big_value = do_bigsub(right.big_value, left.big_value);
+            bigSum.negative = right.negative;
         } else { 
-            sum.big_value = do_bigsub(left.big_value, right.big_value);
-            sum.negative = left.negative;
+            bigSum.big_value = do_bigsub(left.big_value, right.big_value);
+            bigSum.negative = left.negative;
         }
-        return sum;
+        return bigSum;
     } else {        
-        sum.big_value = do_bigadd(left.big_value, right.big_value);
-        sum.negative = left.negative;
-        return sum;      
+        bigSum.big_value = do_bigadd(left.big_value, right.big_value);
+        bigSum.negative = left.negative;
+        return bigSum;      
     }
 }
 
