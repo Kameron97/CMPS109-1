@@ -335,14 +335,14 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
 bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     bigvalue_t shift;
     size_t i = 0;
-    
+    auto dqBegin = dq.cbegin();
     while (i < k) {
         shift.push_back(0);
         i++;
     }
-    while (dq.cbegin() != dq.cend()) {
-        shift.push_back(*(dq.cbegin()));
-        (dq.cbegin())++;
+    while (dqBegin != dq.cend()) {
+        shift.push_back(*dqBegin);
+        dqBegin++;
     }
     return do_bigsub (r, shift); 
 }
