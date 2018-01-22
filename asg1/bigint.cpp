@@ -66,24 +66,24 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
         i++;
     }
     for (; i < left.size(); i++) {
-        digit_sum = left.at(i) + carry;
-        if (digit_sum <= 9) {   
-            carry = 0;
+        digSum = left.at(i) + borrow;
+        if (digSum <= 9) {   
+            borrow = 0;
         } else {
-            carry = 1;
-            digit_sum -= 10;
+            borrow = 1;
+            digSum -= 10;
         }
-        sum.push_back(digit_sum);
+        sumAdd.push_back(digSum);
     }
     for (; i < right.size(); i++) {
-        digit_sum = right.at(i) + carry;
-        if (digit_sum <= 9) {         
-            carry = 0;
+        digSum = right.at(i) + borrow;
+        if (digSum <= 9) {         
+            borrow = 0;
         } else {
-              carry = 1;
-            digit_sum -= 10;
+            borrow = 1;
+            digSum -= 10;
         }
-        sum.push_back(digit_sum);
+        sumAdd.push_back(digSum);
         
     }
     if (carry != 1)
