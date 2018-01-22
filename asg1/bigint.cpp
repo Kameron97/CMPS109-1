@@ -29,23 +29,23 @@ bigint::bigint (const string& that) {
 
 void bigint::init (const string& that) {
     negative = false;
-    auto itor = that.cbegin();
-    if (itor != that.cend()) {
-        if (*itor == '_' || *itor == '-') {
+    auto i = that.cbegin();
+    if (i != that.cend()) {
+        if (*i == '_' || *i == '-') {
             negative = true;
-            ++itor;
+            ++i;
         }
     }
-    int newval = 0;
-    for (; itor != that.end() ;) {
-        newval = newval * 10 + *itor++ - '0';
+    int value = 0;
+    for (; i != that.end() ;) {
+        value = value * 10 + *i++ - '0';
     }
-    auto ritor  = that.crbegin();
-    while (ritor != that.crend() && *ritor != '_' ) {
-        big_value.push_back(*ritor - '0');
-        ritor++;
+    auto j  = that.crbegin();
+    while (j != that.crend() && *j != '_' ) {
+        big_value.push_back(*j - '0');
+        j++;
     }
-    long_value = negative ? - newval : + newval;
+    long_value = negative ? - value : + value;
 }
 
 
@@ -292,9 +292,6 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
     if ((r.size() <= km) && (r.size() <= km - 1) && (r.size() <= km - 2)) {
         r3 = 0;
     } else {
-        if (r.size() < km) {
-            r3 = 0;
-        }
         if (r.size() > km) {
             r3 = (r.at(km)*10 + r.at(km - 1))*10 + r.at(km - 2);
         } else if (r.size() > km - 1) {

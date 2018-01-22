@@ -11,9 +11,6 @@ using namespace std;
 using digit_t = unsigned char;
 using bigvalue_t = vector<digit_t>;
 
-//
-// Define class bigint
-//
 class bigint {
     friend ostream& operator<< (ostream&, const bigint&);
   private:
@@ -44,9 +41,6 @@ class bigint {
     friend quot_rem divide(const bigvalue_t& x, const bigvalue_t& y);
   public:
 
-    //
-    // Ensure synthesized members are genrated.
-    //
     bigint() = default;
     bigint (const bigint&) = default;
     bigint (bigint&&) = default;
@@ -54,40 +48,27 @@ class bigint {
     bigint& operator= (bigint&&) = default;
     ~bigint() = default;
 
-    //
-    // Extra ctors to make bigints.
-    //
     bigint (const bigvalue_t&);
     bigint (const long);
     bigint (const string&);
 
-    //
-    // Basic add/sub operators.
-    //
     friend bigint operator+ (const bigint&, const bigint&);
     friend bigint operator- (const bigint&, const bigint&);
     friend bigint operator+ (const bigint&);
     friend bigint operator- (const bigint&);
     long to_long() const;
 
-    //
-    // Extended operators implemented with add/sub.
-    //
+
     friend bigint operator* (const bigint&, const bigint&);
     friend bigint operator/ (const bigint&, const bigint&);
     friend bigint operator% (const bigint&, const bigint&);
 
-    //
-    // Comparison operators.
-    //
+ 
     friend bool operator== (const bigint&, const bigint&);
     friend bool operator<  (const bigint&, const bigint&);
 };
 
-//
-// The rest of the operators do not need to be friends.
-// Make the comparisons inline for efficiency.
-//
+
 
 ostream& operator<< (ostream& out, const bigvalue_t& that);
 
