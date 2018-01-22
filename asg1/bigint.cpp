@@ -348,31 +348,31 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_
 }
 
 bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
-    bigvalue_t d, dq, q(n, 0), r;
-    int f, qt;
-    int k;
+    bigvalue_t dInc, dInc2, qtr(n, 0), rInc;
+    int fInc, qInc;
+    int kInc;
 
-    f = 10 / (y.at(m - 1) + 1);
-    r = partial_prod(x, f);
-    d = partial_prod(y, f);
-    for (k = n - m; k >= 0; k--) {
-        qt = trialdigit(r, d, k, m);
-        dq = partial_prod(d, qt);
-        if (smaller(r, dq, k, m)) {
-            qt = qt - 1;
-            dq = partial_prod(d, qt);
+    fInc = 10 / (y.at(m - 1) + 1);
+    rInc = partial_prod(x, fInc);
+    dInc = partial_prod(y, fInc);
+    for (kInc = n - m; kInc >= 0; kInc--) {
+        qInc = trialdigit(rInc, dInc, kInc, m);
+        dInc2 = partial_prod(dInc, qInc);
+        if (smaller(rInc, dInc2, kInc, m)) {
+            qInc = qInc - 1;
+            dInc2 = partial_prod(dInc, qInc);
         }
 
-        q.at(k) = qt;
-        r = difference(r, dq, k, m);
+        qtr.at(kInc) = qInc;
+        r = difference(rInc, dInc2, kInc, m);
     }
 
-    while (r.size() > 1 && r.back() == 0)
-        r.pop_back();
-    while (q.size() > 1 && q.back() == 0)
-        q.pop_back();
+    while (rInc.size() > 1 && rInc.back() == 0)
+        rInc.pop_back();
+    while (qtr.size() > 1 && qtr.back() == 0)
+        qtr.pop_back();
    
-    return make_pair(bigint(q), bigint(partial_quot(r,f)));
+    return make_pair(bigint(qtr), bigint(partial_quot(rInc,fInc)));
 }
 
 bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
