@@ -11,11 +11,10 @@ using namespace std;
 #include "debug.h"
 #include "util.h"
 
-//#define LINE_LIMIT 69
 
 
 bigint::bigint (const bigvalue_t& that): big_value (that) {
-    DEBUGF ('~', this << " -> " << big_value << " (copy ctor)")
+    DEBUGF ('~', this << " -> " << big_value << " (debugConstructor)")
 }
 
 bigint::bigint (long that): long_value (that) {
