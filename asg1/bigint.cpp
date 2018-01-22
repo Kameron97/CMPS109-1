@@ -226,31 +226,29 @@ bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
 }
 
 bigint operator* (const bigint& left, const bigint& right) {
-    bigint product;
-    product.negative = (left.negative != right.negative);
-    product.big_value = do_bigmul(left.big_value, 
+    bigint prod;
+    prod.negative = (left.negative != right.negative);
+    prod.big_value = do_bigmul(left.big_value, 
             right.big_value);
-    return product;
+    return prod;
 }
 
 
 
 bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
-    int temp, carry;
+    int carryOver = 0;
     size_t size = x.size();
-    bigvalue_t product(x.size() + 1, 0);
-    carry = 0;
+    bigvalue_t prod(x.size() + 1, 0);
+    int tmp = 0;
     for (size_t i = 0; i < size; i++) {
-        temp = x.at(i) * k + carry;
-        product.at(i) = temp % 10;
-        carry = temp / 10;
+        tmp = x.at(i) * k + carryOver;
+        prod.at(i) = tmp % 10;
+        carryOver = tmp / 10;
     }
-    product.at(size) = carry;
-    while (product.size() > 1 && product.back() == 0)
-        product.pop_back();
-    DEBUGF ('/', "partial_prod(" << x << ", "
-                 << (int) k << ") = " << product)
-    return product;
+    prod.at(size) = carryOver;
+    while (prod.size() > 1 && prod.back() == 0)
+        prod.pop_back();
+    return prod;
 }
 
 bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
