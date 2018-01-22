@@ -49,11 +49,11 @@ void bigint::init (const string& that) {
 }
 
 
-bigintFunc bigAdd (const bigintFunc& left, const bigintFunc& right) {
+bigintFunc do_bigadd (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc sumAdd;
     size_t i = 0;
-    digitFunc borrow(0);
-    digitFunc digSum(0);
+    digit_t borrow(0);
+    digit_t digSum(0);
     while (i < min(left.size(), right.size())) {
         digSum = left.at(i) + right.at(i) + borrow;
         if (digSum <= 9) {
@@ -94,10 +94,10 @@ bigintFunc bigAdd (const bigintFunc& left, const bigintFunc& right) {
     return sumAdd;
 }
 
-bigintFunc bigSub (const bigintFunc& left, const bigintFunc& right) {
+bigintFunc do_bigsub (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc diffSub;
-    digitFunc borrow(0);
-    digitFunc digSub(0);
+    digit_t borrow(0);
+    digit_t digSub(0);
     size_t i = 0;
     
     while (i < right.size()) {
@@ -132,7 +132,7 @@ bigintFunc bigSub (const bigintFunc& left, const bigintFunc& right) {
 }
 
 
-bool bigDiff (const bigintFunc& left, const bigintFunc& right) {
+bool do_bigless (const bigintFunc& left, const bigintFunc& right) {
     if (left.size() > right.size()) {
         return false;
     } else {
@@ -158,16 +158,16 @@ bool bigDiff (const bigintFunc& left, const bigintFunc& right) {
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint bigSum;
     if (left.negative != right.negative) {
-        if (bigDiff(left.big_value, right.big_value)) {
-            bigSum.big_value = bigSub(right.big_value, left.big_value);
+        if (do_bigless(left.big_value, right.big_value)) {
+            bigSum.big_value = do_bigsub(right.big_value, left.big_value);
             bigSum.negative = right.negative;
         } else { 
-            bigSum.big_value = bigSub(left.big_value, right.big_value);
+            bigSum.big_value = do_bigsub(left.big_value, right.big_value);
             bigSum.negative = left.negative;
         }
         return bigSum;
     } else {        
-        bigSum.big_value = bigAdd(left.big_value, right.big_value);
+        bigSum.big_value = do_bigadd(left.big_value, right.big_value);
         bigSum.negative = left.negative;
         return bigSum;      
     }
@@ -176,12 +176,12 @@ bigint operator+ (const bigint& left, const bigint& right) {
 bigint operator- (const bigint& left, const bigint& right) {
     bigint bigDiff;
     if (left.negative == right.negative) {
-        if (bigDiff(left.big_value, right.big_value)) {
-            bigDiff.big_value = bigSub(right.big_value, 
+        if (do_bigless(left.big_value, right.big_value)) {
+            bigDiff.big_value = do_bigsub(right.big_value, 
                     left.big_value);
             bigDiff.negative = not right.negative;
         } else {
-            bigDiff.big_value = bigSub(left.big_value,
+            bigDiff.big_value = do_bigsub(left.big_value,
                     right.big_value);
             bigDiff.negative = left.negative;
         }
@@ -189,7 +189,7 @@ bigint operator- (const bigint& left, const bigint& right) {
         return bigDiff;
     } else {
         bigDiff.negative = left.negative;
-        bigDiff.big_value = bigAdd(left.big_value, 
+        bigDiff.big_value = do_bigadd(left.big_value, 
                 right.big_value);
         return bigDiff;
     }
@@ -208,9 +208,9 @@ bigint operator- (const bigint& right) {
     return posDiff;
 }
 
-bigintFunc bigMult (const bigintFunc& left, const bigintFunc& right) {
+bigintFunc do_bigmul (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc prod(left.size() + right.size(), 0);
-    digitFunc count, dInc;
+    digit_t count, dInc;
     for (size_t i = 0; i < left.size(); i++) {
         count = 0;
         for (size_t j = 0; j < right.size(); j++) {
@@ -228,14 +228,14 @@ bigintFunc bigMult (const bigintFunc& left, const bigintFunc& right) {
 bigint operator* (const bigint& left, const bigint& right) {
     bigint prod;
     prod.negative = (left.negative != right.negative);
-    prod.big_value = bigMult(left.big_value, 
+    prod.big_value = do_bigmul(left.big_value, 
             right.big_value);
     return prod;
 }
 
 
 
-bigintFunc pprod(const bigintFunc& x, size_t k) {
+bigintFunc partial_prod(const bigintFunc& x, size_t k) {
     int carryOver = 0;
     bigintFunc prod(x.size() + 1, 0);
     int tmp = 0;
@@ -250,7 +250,7 @@ bigintFunc pprod(const bigintFunc& x, size_t k) {
     return prod;
 }
 
-bigintFunc pquot(const bigintFunc& x, size_t k) {
+bigintFunc partial_quot(const bigintFunc& x, size_t k) {
     int carryOver = 0; 
     bigintFunc quotient(x.size(), 0);
     size_t i = x.size() - 1;
@@ -267,7 +267,7 @@ bigintFunc pquot(const bigintFunc& x, size_t k) {
     return quotient;
 }
 
-bigintFunc prem(const bigintFunc& x, size_t k) {
+bigintFunc partial_rem(const bigintFunc& x, size_t k) {
     int carryOver = 0;
     size_t i = x.size() - 1;
     while (i < x.size()) {
@@ -278,7 +278,7 @@ bigintFunc prem(const bigintFunc& x, size_t k) {
 }
 
 
-digitFunc testDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
+digit_t trialdigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
     int rInc = 0;
     size_t kInc = k + m;
 
@@ -308,7 +308,7 @@ digitFunc testDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m
 
 
 
-bool minFinder(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bool smaller(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     bigintFunc copy(r);
     for (;copy.size() <= m + k;) {
         copy.push_back(0);
@@ -332,7 +332,7 @@ bool minFinder(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     return copy.at(i + k) < dq_copy.at(i);
 }
 
-bigintFunc diff(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bigintFunc difference(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     bigintFunc shift;
     size_t i = 0;
     auto dqBegin = dq.cbegin();
@@ -344,7 +344,7 @@ bigintFunc diff(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
         shift.push_back(*dqBegin);
         dqBegin++;
     }
-    return bigSub (r, shift); 
+    return do_bigsub (r, shift); 
 }
 
 bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m) {
@@ -353,18 +353,18 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     int kInc;
 
     fInc = 10 / (y.at(m - 1) + 1);
-    rInc = pprod(x, fInc);
-    dInc = pprod(y, fInc);
+    rInc = partial_prod(x, fInc);
+    dInc = partial_prod(y, fInc);
     for (kInc = n - m; kInc >= 0; kInc--) {
-        qInc = testDigit(rInc, dInc, kInc, m);
-        dInc2 = pprod(dInc, qInc);
-        if (minFinder(rInc, dInc2, kInc, m)) {
+        qInc = trialdigit(rInc, dInc, kInc, m);
+        dInc2 = partial_prod(dInc, qInc);
+        if (smaller(rInc, dInc2, kInc, m)) {
             qInc = qInc - 1;
-            dInc2 = pprod(dInc, qInc);
+            dInc2 = partial_prod(dInc, qInc);
         }
 
         qtr.at(kInc) = qInc;
-        rInc = diff(rInc, dInc2, kInc, m);
+        rInc = difference(rInc, dInc2, kInc, m);
     }
 
     while (rInc.size() > 1 && rInc.back() == 0)
@@ -372,7 +372,7 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     while (qtr.size() > 1 && qtr.back() == 0)
         qtr.pop_back();
    
-    return make_pair(bigint(qtr), bigint(pquot(rInc,fInc)));
+    return make_pair(bigint(qtr), bigint(partial_quot(rInc,fInc)));
 }
 
 bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
@@ -384,7 +384,7 @@ bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
         }       
     } else {
         int yInc = y.at(y.size() - 1);
-        return make_pair(bigint(pquot(x, yInc)), bigint(prem(x, yInc)));
+        return make_pair(bigint(partial_quot(x, yInc)), bigint(partial_rem(x, yInc)));
     }
 }
 
@@ -425,12 +425,12 @@ bool operator< (const bigint& left, const bigint& right) {
     bool isCorrectOperator = false;
     if (left.negative) {
         if (right.negative) 
-            isCorrectOperator = bigDiff(right.big_value, left.big_value);
+            isCorrectOperator = do_bigless(right.big_value, left.big_value);
         else 
             isCorrectOperator = true;
     } else {
         if (!right.negative)
-            isCorrectOperator = bigDiff(left.big_value, right.big_value);           
+            isCorrectOperator = do_bigless(left.big_value, right.big_value);           
         else 
             isCorrectOperator = false;
     }
