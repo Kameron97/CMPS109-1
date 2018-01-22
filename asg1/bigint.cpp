@@ -380,7 +380,7 @@ bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
         if (y.size() > x.size()) {
             return make_pair(bigint(0), x);
         } else {
-            return longdiv(x, y, x.size(), y.size();
+            return longdiv(x, y, x.size(), y.size());
         }       
     } else {
         int y1 = y.at(y.size() - 1);
