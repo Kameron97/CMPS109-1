@@ -13,7 +13,7 @@ using namespace std;
 
 
 
-bigint::bigint (const bigvalue_t& that): big_value (that) {
+bigint::bigint (const bigintFunc& that): big_value (that) {
     DEBUGF ('~', this << " -> " << big_value << " (debugConstructor)")
 }
 
@@ -49,8 +49,8 @@ void bigint::init (const string& that) {
 }
 
 
-bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t sumAdd;
+bigintFunc do_bigadd (const bigintFunc& left, const bigintFunc& right) {
+    bigintFunc sumAdd;
     size_t i = 0;
     digit_t borrow(0);
     digit_t digSum(0);
@@ -94,8 +94,8 @@ bigvalue_t do_bigadd (const bigvalue_t& left, const bigvalue_t& right) {
     return sumAdd;
 }
 
-bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t diffSub;
+bigintFunc do_bigsub (const bigintFunc& left, const bigintFunc& right) {
+    bigintFunc diffSub;
     digit_t borrow(0);
     digit_t digSub(0);
     size_t i = 0;
@@ -132,7 +132,7 @@ bigvalue_t do_bigsub (const bigvalue_t& left, const bigvalue_t& right) {
 }
 
 
-bool do_bigless (const bigvalue_t& left, const bigvalue_t& right) {
+bool do_bigless (const bigintFunc& left, const bigintFunc& right) {
     if (left.size() > right.size()) {
         return false;
     } else {
@@ -208,8 +208,8 @@ bigint operator- (const bigint& right) {
     return posDiff;
 }
 
-bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t prod(left.size() + right.size(), 0);
+bigintFunc do_bigmul (const bigintFunc& left, const bigintFunc& right) {
+    bigintFunc prod(left.size() + right.size(), 0);
     digit_t count, dInc;
     for (size_t i = 0; i < left.size(); i++) {
         count = 0;
@@ -235,9 +235,9 @@ bigint operator* (const bigint& left, const bigint& right) {
 
 
 
-bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
+bigintFunc partial_prod(const bigintFunc& x, size_t k) {
     int carryOver = 0;
-    bigvalue_t prod(x.size() + 1, 0);
+    bigintFunc prod(x.size() + 1, 0);
     int tmp = 0;
     for (size_t i = 0; i < x.size(); i++) {
         tmp = x.at(i) * k + carryOver;
@@ -250,9 +250,9 @@ bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
     return prod;
 }
 
-bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
+bigintFunc partial_quot(const bigintFunc& x, size_t k) {
     int carryOver = 0; 
-    bigvalue_t quotient(x.size(), 0);
+    bigintFunc quotient(x.size(), 0);
     size_t i = x.size() - 1;
     int tmp = 0;
     while (i < x.size()) {
@@ -267,18 +267,18 @@ bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
     return quotient;
 }
 
-bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
+bigintFunc partial_rem(const bigintFunc& x, size_t k) {
     int carryOver = 0;
     size_t i = x.size() - 1;
     while (i < x.size()) {
         carryOver = (x.at(i) + 10 * carryOver) % k;
         i--;
     }
-    return bigvalue_t(1, carryOver);
+    return bigintFunc(1, carryOver);
 }
 
 
-digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m) {
+digit_t trialdigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
     int rInc = 0;
     size_t kInc = k + m;
 
@@ -308,13 +308,13 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
 
 
 
-bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
-    bigvalue_t copy(r);
+bool smaller(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+    bigintFunc copy(r);
     for (;copy.size() <= m + k;) {
         copy.push_back(0);
     }
 
-    bigvalue_t dq_copy(dq);
+    bigintFunc dq_copy(dq);
     for (;dq_copy.size() <= m;) {
         dq_copy.push_back(0);
     }
@@ -332,8 +332,8 @@ bool smaller(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
     return copy.at(i + k) < dq_copy.at(i);
 }
 
-bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_t m) {
-    bigvalue_t shift;
+bigintFunc difference(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+    bigintFunc shift;
     size_t i = 0;
     auto dqBegin = dq.cbegin();
     while (i < k) {
@@ -347,8 +347,8 @@ bigvalue_t difference(const bigvalue_t& r, const bigvalue_t& dq, size_t k, size_
     return do_bigsub (r, shift); 
 }
 
-bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size_t m) {
-    bigvalue_t dInc, dInc2, qtr(n, 0), rInc;
+bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m) {
+    bigintFunc dInc, dInc2, qtr(n, 0), rInc;
     int fInc, qInc;
     int kInc;
 
@@ -375,7 +375,7 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
     return make_pair(bigint(qtr), bigint(partial_quot(rInc,fInc)));
 }
 
-bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
+bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
     if (y.size() != 1) {
         if (y.size() > x.size()) {
             return make_pair(bigint(0), x);
@@ -445,7 +445,7 @@ ostream& operator<< (ostream& out, const bigint& that) {
     return out;
 }
 
-ostream& operator<< (ostream& out, const bigvalue_t& that) {
+ostream& operator<< (ostream& out, const bigintFunc& that) {
     size_t i = 0;
     auto r = that.crbegin();
 

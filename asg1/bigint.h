@@ -1,4 +1,3 @@
-
 #ifndef __BIGINT_H__
 #define __BIGINT_H__
 
@@ -13,6 +12,8 @@ using bigintFunc = vector<digit_t>;
 
 class bigint {
     friend ostream& operator<< (ostream&, const bigint&);
+  
+  
   private:
     void init (const string&);
     long long_value {};
@@ -39,6 +40,8 @@ class bigint {
     friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
                             size_t n, size_t m);
     friend quot_rem divide(const bigintFunc& x, const bigintFunc& y);
+  
+  
   public:
 
     bigint() = default;
@@ -87,4 +90,3 @@ inline bool operator>= (const bigint &left, const bigint &right) {
     return not (left < right);
 }
 #endif
-
