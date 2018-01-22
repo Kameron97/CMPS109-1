@@ -254,10 +254,9 @@ bigvalue_t partial_prod(const bigvalue_t& x, size_t k) {
 bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
     int carryOver = 0; 
     bigvalue_t quotient(x.size(), 0);
-    size_t size = x.size();
-    size_t i = size - 1;
+    size_t i = x.size() - 1;
     int tmp = 0;
-    while (i < size) {
+    while (i < x.size()) {
         tmp = x.at(i) + 10 * carryOver;
         quotient.at(i) = tmp / k;
         carryOver = tmp % k;
@@ -270,14 +269,13 @@ bigvalue_t partial_quot(const bigvalue_t& x, size_t k) {
 }
 
 bigvalue_t partial_rem(const bigvalue_t& x, size_t k) {
-    int carry = 0;
-    size_t size = x.size();
-    size_t i = size - 1;
-    while (i < size) {
-        carry = (x.at(i) + 10 * carry) % k;
+    int carryOver = 0;
+    size_t i = x.size() - 1;
+    while (i < x.size()) {
+        carryOver = (x.at(i) + 10 * carryOver) % k;
         i--;
     }
-    return bigvalue_t(1, carry);
+    return bigvalue_t(1, carryOver);
 }
 
 
