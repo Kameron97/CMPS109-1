@@ -407,13 +407,8 @@ bigint operator/ (const bigint& left, const bigint& right) {
 }
 
 bigint operator% (const bigint& left, const bigint& right) {
-    if (left == NULL || right == NULL) {
-        result.negative  = 0;
-    } else { 
-        bigint result = divide (left.big_value, right.big_value).second;
-        result.negative = left.negative ^ right.negative;
-    }
-  
+    bigint result = divide (left.big_value, right.big_value).second;
+    result.negative = left.negative ^ right.negative;
     return result;
 }
 
