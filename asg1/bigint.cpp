@@ -293,13 +293,14 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
         r3 = 0;
     } else {
         if (r.size() > km) {
-            r3 = (r.at(km - 1))*10 + (r.at(km)*10) +  r.at(km - 2);
+            r3 = (r.at(km)*10 + r.at(km - 1))*10 + r.at(km - 2);
         } else if (r.size() > km - 1) {
             r3 = r.at(km - 1)*10 + r.at(km - 2);
         } else if (r.size() > km - 2) {
             r3 = r.at(km - 2);
         }
     }
+
     if (d.size() > m - 1) {
         d2 = d.at(m - 1)*10 + d.at(m - 2);
     } else if (d.size() > m - 2) {
@@ -469,10 +470,18 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
 }
 
 long bigint::to_long() const {
+    /*
     if (*this <= bigint (numeric_limits<long>::min())
             or *this > bigint (numeric_limits<long>::max()))
         throw range_error ("bigint__to_long: out of range");
-    return long_value;
+*/
+    if (*this > bigint (numeric_limits<long>::min())) {
+        if (*this <= bigint (numeric_limits<long>::max())) {
+            return long_value;
+        }
+    }
+    throw range_error ("bigint__to_long: out of range");
+    
 }
 
 
