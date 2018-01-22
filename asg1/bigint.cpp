@@ -11,7 +11,7 @@ using namespace std;
 #include "debug.h"
 #include "util.h"
 
-#define LINE_LIMIT 69
+//#define LINE_LIMIT 69
 
 
 bigint::bigint (const bigvalue_t& that): big_value (that) {
@@ -453,7 +453,7 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
     while (r != that.crend()) {
         out << (int) *r;
         i++;
-        if (i == LINE_LIMIT) {
+        if (i == 69) {
             out << "\\" << endl;
             i = 0;
         }
