@@ -1,9 +1,10 @@
 #include <cstdlib>
 #include <exception>
 #include <limits>
-#include <stack>
 #include <stdexcept>
 #include <algorithm>
+#include <stack>
+
 using namespace std;
 
 #include "bigint.h"
