@@ -376,15 +376,13 @@ bigint::quot_rem longdiv(const bigvalue_t& x, const bigvalue_t& y,size_t n, size
 }
 
 bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
-    int n, y1; 
-    int m = y.size();
-    if (m != 1) {
-        n = x.size();
-        if (m > n)
+    int n; 
+    if (y.size() != 1) {
+        if (y.size() > x.size())
             return make_pair(bigint(0), x);
-        return longdiv(x, y, n, m);
+        return longdiv(x, y, n, y.size());
     } else {
-        y1 = y.at(m - 1);
+        int y1 = y.at(y.size() - 1);
         return make_pair(bigint(partial_quot(x, y1)), bigint(partial_rem(x, y1)));
     }
 }
