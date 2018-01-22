@@ -293,7 +293,7 @@ digit_t trialdigit(const bigvalue_t& r, const bigvalue_t& d, size_t k, size_t m)
         r3 = 0;
     } else {
         if (r.size() > km) {
-            r3 = r.at(km - 1))*10 + (r.at(km)*10 +  r.at(km - 2);
+            r3 = (r.at(km - 1))*10 + (r.at(km)*10 +  r.at(km - 2);
         } else if (r.size() > km - 1) {
             r3 = r.at(km - 1)*10 + r.at(km - 2);
         } else if (r.size() > km - 2) {
