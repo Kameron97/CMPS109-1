@@ -470,17 +470,14 @@ ostream& operator<< (ostream& out, const bigvalue_t& that) {
 }
 
 long bigint::to_long() const {
-    /*
-    if (*this <= bigint (numeric_limits<long>::min())
-            or *this > bigint (numeric_limits<long>::max()))
-        throw range_error ("bigint__to_long: out of range");
-*/
     if (*this > bigint (numeric_limits<long>::min())) {
         if (*this <= bigint (numeric_limits<long>::max())) {
             return long_value;
         }
+    } else {
+        throw range_error ("bigint__to_long: out of range");
     }
-    throw range_error ("bigint__to_long: out of range");
+    
     
 }
 
