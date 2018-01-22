@@ -383,25 +383,25 @@ bigint::quot_rem divide(const bigvalue_t& x, const bigvalue_t& y) {
             return longdiv(x, y, x.size(), y.size());
         }       
     } else {
-        int y1 = y.at(y.size() - 1);
-        return make_pair(bigint(partial_quot(x, y1)), bigint(partial_rem(x, y1)));
+        int yInc = y.at(y.size() - 1);
+        return make_pair(bigint(partial_quot(x, yInc)), bigint(partial_rem(x, yInc)));
     }
 }
 
 bigint operator/ (const bigint& left, const bigint& right) {
     if (right != 0) {
-        bigint result = divide (left.big_value, right.big_value).first;
-        result.negative = left.negative ^ right.negative;
-        return result;
+        bigint res = divide (left.big_value, right.big_value).first;
+        res.negative = left.negative ^ right.negative;
+        return res;
     } else {
-        throw ydc_exn ("ydc: divid by zero");
+        throw ydc_exn ("ydc error: Cannot divide by zero");
     }  
 }
 
 bigint operator% (const bigint& left, const bigint& right) {
-    bigint result = divide (left.big_value, right.big_value).second;
-    result.negative = left.negative ^ right.negative;
-    return result;
+    bigint res = divide (left.big_value, right.big_value).second;
+    res.negative = left.negative ^ right.negative;
+    return res;
 }
 
 bool operator== (const bigint& left, const bigint& right) {
@@ -422,19 +422,19 @@ bool operator== (const bigint& left, const bigint& right) {
 }
 
 bool operator< (const bigint& left, const bigint& right) {
-    bool retval = false;
+    bool isCorrectOperator = false;
     if (left.negative) {
         if (right.negative) 
-            retval = do_bigless(right.big_value, left.big_value);
+            isCorrectOperator = do_bigless(right.big_value, left.big_value);
         else 
-            retval = true;
+            isCorrectOperator = true;
     } else {
         if (!right.negative)
-            retval = do_bigless(left.big_value, right.big_value);           
+            isCorrectOperator = do_bigless(left.big_value, right.big_value);           
         else 
-            retval = false;
+            isCorrectOperator = false;
     }
-    return retval;
+    return isCorrectOperator;
 }
 
 ostream& operator<< (ostream& out, const bigint& that) {
