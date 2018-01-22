@@ -174,55 +174,55 @@ bigint operator+ (const bigint& left, const bigint& right) {
 }
 
 bigint operator- (const bigint& left, const bigint& right) {
-    bigint diff;
+    bigint bigDiff;
     if (left.negative == right.negative) {
         if (do_bigless(left.big_value, right.big_value)) {
-            diff.big_value = do_bigsub(right.big_value, 
+            bigDiff.big_value = do_bigsub(right.big_value, 
                     left.big_value);
-            diff.negative = not right.negative;
+            bigDiff.negative = not right.negative;
         } else {
-            diff.big_value = do_bigsub(left.big_value,
+            bigDiff.big_value = do_bigsub(left.big_value,
                     right.big_value);
-            diff.negative = left.negative;
+            bigDiff.negative = left.negative;
         }
 
-        return diff;
+        return bigDiff;
     } else {
-        diff.negative = left.negative;
-        diff.big_value = do_bigadd(left.big_value, 
+        bigDiff.negative = left.negative;
+        bigDiff.big_value = do_bigadd(left.big_value, 
                 right.big_value);
-        return diff;
+        return bigDiff;
     }
 }
 
 
 bigint operator+ (const bigint& right) {
-    bigint pos_bigint(right);
-    pos_bigint.negative = false;
-    return pos_bigint;
+    bigint posPlus(right);
+    posPlus.negative = false;
+    return posPlus;
 }
 
 bigint operator- (const bigint& right) {
-    bigint pos_bigint(right);
-    pos_bigint.negative = true;
-    return pos_bigint;
+    bigint posDiff(right);
+    posDiff.negative = true;
+    return posDiff;
 }
 
 bigvalue_t do_bigmul (const bigvalue_t& left, const bigvalue_t& right) {
-    bigvalue_t product(left.size() + right.size(), 0);
-    digit_t c, d;
+    bigvalue_t prod(left.size() + right.size(), 0);
+    digit_t count, dInc;
     for (size_t i = 0; i < left.size(); i++) {
-        c = 0;
+        count = 0;
         for (size_t j = 0; j < right.size(); j++) {
-            d = product.at(i+j) + (left.at(i) * right.at(j)) + c;
-            product.at(i+j) = d % 10;
-            c = d / 10;
+            dInc = prod.at(i+j) + (left.at(i) * right.at(j)) + count;
+            prod.at(i+j) = d % 10;
+            count = dInc / 10;
         }
-        product.at(i + right.size()) = c;
+        prod.at(i + right.size()) = count;
     }
-    while (product.size() > 1 && product.back() == 0)
-        product.pop_back();
-    return product;
+    while (prod.size() > 1 && prod.back() == 0)
+        prod.pop_back();
+    return prod;
 }
 
 bigint operator* (const bigint& left, const bigint& right) {
