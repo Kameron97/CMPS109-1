@@ -59,27 +59,7 @@ void ubigint::divide_by_2() {
 
 
 struct quo_rem { ubigint quotient; ubigint remainder; };
-quo_rem udivide (const ubigint& dividend, ubigint divisor) {
-   // Note: divisor is modified so pass by value (copy).
-   ubigint zero {0};
-   if (divisor == zero) throw domain_error ("udivide by zero");
-   ubigint power_of_2 {1};
-   ubigint quotient {0};
-   ubigint remainder {dividend}; // left operand, dividend
-   while (divisor < remainder) {
-      divisor.multiply_by_2();
-      power_of_2.multiply_by_2();
-   }
-   while (power_of_2 > zero) {
-      if (divisor <= remainder) {
-         remainder = remainder - divisor;
-         quotient = quotient + power_of_2;
-      }
-      divisor.divide_by_2();
-      power_of_2.divide_by_2();
-   }
-   return {.quotient = quotient, .remainder = remainder};
-}
+
 
 ubigint ubigint::operator/ (const ubigint& that) const {
    return udivide (*this, that).quotient;
