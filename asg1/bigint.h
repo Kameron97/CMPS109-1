@@ -22,8 +22,6 @@ class bigint {
     using quot_rem = pair<bigint,bigint>;
     using unumber = unsigned long;
     friend quot_rem divide (const bigint&, const bigint&);
-    friend void multiply_by_2 (unumber&);
-    friend void divide_by_2 (unumber&);
     friend bigintFunc do_bigadd (const bigintFunc&, const bigintFunc&);
     friend bigintFunc do_bigsub (const bigintFunc&, const bigintFunc&);
     friend bigintFunc do_bigmul (const bigintFunc&, const bigintFunc&);
