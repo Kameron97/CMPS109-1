@@ -22,7 +22,7 @@ class bigint {
     using quot_rem = pair<bigint,bigint>;
     using unumber = unsigned long;
     friend quot_rem divide (const bigint&, const bigint&);
-    friend bigintFunc do_bigadd (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc bigAdd (const bigintFunc&, const bigintFunc&);
     friend bigintFunc do_bigsub (const bigintFunc&, const bigintFunc&);
     friend bigintFunc do_bigmul (const bigintFunc&, const bigintFunc&);
     friend bool do_bigless (const bigintFunc&, const bigintFunc&);

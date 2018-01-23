@@ -49,7 +49,7 @@ void bigint::init (const string& that) {
 }
 
 
-bigintFunc do_bigadd (const bigintFunc& left, const bigintFunc& right) {
+bigintFunc bigAdd (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc sumAdd;
     size_t i = 0;
     digit_t borrow(0);
@@ -167,7 +167,7 @@ bigint operator+ (const bigint& left, const bigint& right) {
         }
         return bigSum;
     } else {        
-        bigSum.big_value = do_bigadd(left.big_value, right.big_value);
+        bigSum.big_value = bigAdd(left.big_value, right.big_value);
         bigSum.negative = left.negative;
         return bigSum;      
     }
@@ -189,7 +189,7 @@ bigint operator- (const bigint& left, const bigint& right) {
         return bigDiff;
     } else {
         bigDiff.negative = left.negative;
-        bigDiff.big_value = do_bigadd(left.big_value, 
+        bigDiff.big_value = bigAdd(left.big_value, 
                 right.big_value);
         return bigDiff;
     }
