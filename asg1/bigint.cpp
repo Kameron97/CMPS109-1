@@ -332,7 +332,7 @@ bool testMin(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     return copy.at(i + k) < dq_copy.at(i);
 }
 
-bigintFunc difference(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     bigintFunc shift;
     size_t i = 0;
     auto dqBegin = dq.cbegin();
@@ -364,7 +364,7 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
         }
 
         qtr.at(kInc) = qInc;
-        rInc = difference(rInc, dInc2, kInc, m);
+        rInc = findDiff(rInc, dInc2, kInc, m);
     }
 
     while (rInc.size() > 1 && rInc.back() == 0)
