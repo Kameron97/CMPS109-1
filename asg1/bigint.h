@@ -36,7 +36,7 @@ class bigint {
                  const bigintFunc&, size_t, size_t);
     friend bigintFunc findDiff(const bigintFunc&, 
                  const bigintFunc&, size_t, size_t);
-    friend quot_rem longdiv(const bigintFunc& x, 
+    friend quot_rem longdiv(const bigintFunc& x,
             const bigintFunc& y,size_t n, size_t m);
     friend quot_rem divide(const bigintFunc& x, const bigintFunc& y);
   
