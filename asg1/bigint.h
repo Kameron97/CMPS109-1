@@ -25,7 +25,7 @@ class bigint {
     friend bigintFunc bigAdd (const bigintFunc&, const bigintFunc&);
     friend bigintFunc bigSub (const bigintFunc&, const bigintFunc&);
     friend bigintFunc bigMult (const bigintFunc&, const bigintFunc&);
-    friend bool do_bigless (const bigintFunc&, const bigintFunc&);
+    friend bool bigDiff (const bigintFunc&, const bigintFunc&);
     friend bigintFunc partial_prod(const bigintFunc&, size_t);
     friend bigintFunc partial_quot(const bigintFunc&, size_t);
     friend bigintFunc partial_rem(const bigintFunc&, size_t);
