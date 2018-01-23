@@ -308,7 +308,7 @@ digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_
 
 
 
-bool smaller(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bool testMin(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     bigintFunc copy(r);
     for (;copy.size() <= m + k;) {
         copy.push_back(0);
@@ -358,7 +358,7 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     for (kInc = n - m; kInc >= 0; kInc--) {
         qInc = isCorrectDigit(rInc, dInc, kInc, m);
         dInc2 = pprod(dInc, qInc);
-        if (smaller(rInc, dInc2, kInc, m)) {
+        if (testMin(rInc, dInc2, kInc, m)) {
             qInc = qInc - 1;
             dInc2 = pprod(dInc, qInc);
         }
