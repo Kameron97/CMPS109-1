@@ -62,7 +62,7 @@ void bigint::init (const string& that) {
 
 bigintFunc bigAdd (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc sumAdd;
-    size_t i = 0;
+    sizeVector i = 0;
     digit_t borrow(0);
     digit_t digSum(0);
     while (i < min(left.size(), right.size())) {
@@ -109,7 +109,7 @@ bigintFunc bigSub (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc diffSub;
     digit_t borrow(0);
     digit_t digSub(0);
-    size_t i = 0;
+    sizeVector i = 0;
     
     while (i < right.size()) {
         
@@ -222,9 +222,9 @@ bigint operator- (const bigint& right) {
 bigintFunc bigMult (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc prod(left.size() + right.size(), 0);
     digit_t count, dInc;
-    for (size_t i = 0; i < left.size(); i++) {
+    for (sizeVector i = 0; i < left.size(); i++) {
         count = 0;
-        for (size_t j = 0; j < right.size(); j++) {
+        for (sizeVector j = 0; j < right.size(); j++) {
             dInc = prod.at(i+j) + (left.at(i) * right.at(j)) + count;
             prod.at(i+j) = dInc % 10;
             count = dInc / 10;
@@ -246,11 +246,11 @@ bigint operator* (const bigint& left, const bigint& right) {
 
 
 
-bigintFunc pprod(const bigintFunc& x, size_t k) {
+bigintFunc pprod(const bigintFunc& x, sizeVector k) {
     int carryOver = 0;
     bigintFunc prod(x.size() + 1, 0);
     int tmp = 0;
-    for (size_t i = 0; i < x.size(); i++) {
+    for (sizeVector i = 0; i < x.size(); i++) {
         tmp = x.at(i) * k + carryOver;
         prod.at(i) = tmp % 10;
         carryOver = tmp / 10;
@@ -261,10 +261,10 @@ bigintFunc pprod(const bigintFunc& x, size_t k) {
     return prod;
 }
 
-bigintFunc pquot(const bigintFunc& x, size_t k) {
+bigintFunc pquot(const bigintFunc& x, sizeVector k) {
     int carryOver = 0; 
     bigintFunc quotient(x.size(), 0);
-    size_t i = x.size() - 1;
+    sizeVector i = x.size() - 1;
     int tmp = 0;
     while (i < x.size()) {
         tmp = x.at(i) + 10 * carryOver;
@@ -278,9 +278,9 @@ bigintFunc pquot(const bigintFunc& x, size_t k) {
     return quotient;
 }
 
-bigintFunc prem(const bigintFunc& x, size_t k) {
+bigintFunc prem(const bigintFunc& x, sizeVector k) {
     int carryOver = 0;
-    size_t i = x.size() - 1;
+    sizeVector i = x.size() - 1;
     while (i < x.size()) {
         carryOver = (x.at(i) + 10 * carryOver) % k;
         i--;
@@ -289,9 +289,9 @@ bigintFunc prem(const bigintFunc& x, size_t k) {
 }
 
 digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d,
-               size_t k, size_t m) {
+               sizeVector k, sizeVector m) {
     int rInc = 0;
-    size_t kInc = k + m;
+    sizeVector kInc = k + m;
 
     if ((r.size() <= kInc) && (r.size() <= kInc - 1) && 
                               (r.size() <= kInc - 2)) {
@@ -321,7 +321,7 @@ digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d,
 
 
 bool testMin(const bigintFunc& r, const bigintFunc& dq, 
-                                  size_t k, size_t m) {
+                                  sizeVector k, sizeVector m) {
     bigintFunc copy(r);
     for (;copy.size() <= m + k;) {
         copy.push_back(0);
@@ -346,9 +346,9 @@ bool testMin(const bigintFunc& r, const bigintFunc& dq,
 }
 
 bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq,
-                                         size_t k, size_t m) {
+                                         sizeVector k, sizeVector m) {
     bigintFunc shift;
-    size_t i = 0;
+    sizeVector i = 0;
     auto dqBegin = dq.cbegin();
     while (i < k) {
         shift.push_back(0);
@@ -362,7 +362,7 @@ bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq,
 }
 
 bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
-                                             size_t n, size_t m) {
+                                             sizeVector n, sizeVector m) {
     bigintFunc dInc, dInc2, qtr(n, 0), rInc;
     int fInc, qInc;
     int kInc;
@@ -426,7 +426,7 @@ bool operator== (const bigint& left, const bigint& right) {
     } else {
         return true;
     }
-    size_t i = 0;
+    sizeVector i = 0;
     while (i < left.big_value.size()) {
         if (left.big_value.at(i) != right.big_value.at(i)) {
             return false;
@@ -462,7 +462,7 @@ ostream& operator<< (ostream& out, const bigint& that) {
 }
 
 ostream& operator<< (ostream& out, const bigintFunc& that) {
-    size_t i = 0;
+    sizeVector i = 0;
     auto r = that.crbegin();
 
     while (r != that.crend()) {
