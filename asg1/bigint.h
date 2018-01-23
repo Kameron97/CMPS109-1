@@ -57,7 +57,7 @@ class bigint {
     friend bigint operator- (const bigint&, const bigint&);
     friend bigint operator+ (const bigint&);
     friend bigint operator- (const bigint&);
-    long to_long() const;
+    long toLong() const;
 
 
     friend bigint operator* (const bigint&, const bigint&);
