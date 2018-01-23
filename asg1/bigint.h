@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "debug.h"
+#include "ubigint.h"
 using digit_t = unsigned char;
 using bigintFunc = vector<digit_t>;
 
