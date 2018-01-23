@@ -61,13 +61,6 @@ void ubigint::divide_by_2() {
 struct quo_rem { ubigint quotient; ubigint remainder; };
 
 
-ubigint ubigint::operator/ (const ubigint& that) const {
-   return udivide (*this, that).quotient;
-}
-
-ubigint ubigint::operator% (const ubigint& that) const {
-   return udivide (*this, that).remainder;
-}
 
 bool ubigint::operator== (const ubigint& that) const {
    return uvalue == that.uvalue;
