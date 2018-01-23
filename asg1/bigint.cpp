@@ -288,12 +288,13 @@ bigintFunc prem(const bigintFunc& x, size_t k) {
     return bigintFunc(1, carryOver);
 }
 
-
-digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
+digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d,
+               size_t k, size_t m) {
     int rInc = 0;
     size_t kInc = k + m;
 
-    if ((r.size() <= kInc) && (r.size() <= kInc - 1) && (r.size() <= kInc - 2)) {
+    if ((r.size() <= kInc) && (r.size() <= kInc - 1) && 
+                              (r.size() <= kInc - 2)) {
         rInc = 0;
     } else {
         if (r.size() > kInc) {
@@ -319,7 +320,8 @@ digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_
 
 
 
-bool testMin(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bool testMin(const bigintFunc& r, const bigintFunc& dq, 
+                                  size_t k, size_t m) {
     bigintFunc copy(r);
     for (;copy.size() <= m + k;) {
         copy.push_back(0);
@@ -343,7 +345,8 @@ bool testMin(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
     return copy.at(i + k) < dq_copy.at(i);
 }
 
-bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t m) {
+bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq,
+                                         size_t k, size_t m) {
     bigintFunc shift;
     size_t i = 0;
     auto dqBegin = dq.cbegin();
@@ -358,7 +361,8 @@ bigintFunc findDiff(const bigintFunc& r, const bigintFunc& dq, size_t k, size_t 
     return bigSub (r, shift); 
 }
 
-bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m) {
+bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
+                                             size_t n, size_t m) {
     bigintFunc dInc, dInc2, qtr(n, 0), rInc;
     int fInc, qInc;
     int kInc;
@@ -416,7 +420,8 @@ bigint operator% (const bigint& left, const bigint& right) {
 }
 
 bool operator== (const bigint& left, const bigint& right) {
-    if (left.negative == right.negative || left.big_value.size() == right.big_value.size()) {
+    if (left.negative == right.negative || 
+        left.big_value.size() == right.big_value.size()) {
         return false;
     } else {
         return true;
@@ -441,7 +446,7 @@ bool operator< (const bigint& left, const bigint& right) {
             isCorrectOperator = true;
     } else {
         if (!right.negative)
-            isCorrectOperator = isLess(left.big_value, right.big_value);           
+            isCorrectOperator = isLess(left.big_value, right.big_value);
         else 
             isCorrectOperator = false;
     }
@@ -480,8 +485,6 @@ long bigint::to_long() const {
     } else {
         throw range_error ("Out of range");
     }
-    
-    
 }
 
 
