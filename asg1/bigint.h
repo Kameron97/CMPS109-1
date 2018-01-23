@@ -26,7 +26,7 @@ class bigint {
     friend bigintFunc bigSub (const bigintFunc&, const bigintFunc&);
     friend bigintFunc bigMult (const bigintFunc&, const bigintFunc&);
     friend bool isLess (const bigintFunc&, const bigintFunc&);
-    friend bigintFunc partial_prod(const bigintFunc&, size_t);
+    friend bigintFunc pprod(const bigintFunc&, size_t);
     friend bigintFunc partial_quot(const bigintFunc&, size_t);
     friend bigintFunc partial_rem(const bigintFunc&, size_t);
     friend digit_t trialdigit(const bigintFunc&, const bigintFunc&, size_t, size_t);

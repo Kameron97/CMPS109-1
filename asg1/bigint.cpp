@@ -132,7 +132,7 @@ bigintFunc bigSub (const bigintFunc& left, const bigintFunc& right) {
 }
 
 
-bool do_bigless (const bigintFunc& left, const bigintFunc& right) {
+bool isLess (const bigintFunc& left, const bigintFunc& right) {
     if (left.size() > right.size()) {
         return false;
     } else {
@@ -158,7 +158,7 @@ bool do_bigless (const bigintFunc& left, const bigintFunc& right) {
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint bigSum;
     if (left.negative != right.negative) {
-        if (do_bigless(left.big_value, right.big_value)) {
+        if (isLess(left.big_value, right.big_value)) {
             bigSum.big_value = bigSub(right.big_value, left.big_value);
             bigSum.negative = right.negative;
         } else { 
@@ -176,7 +176,7 @@ bigint operator+ (const bigint& left, const bigint& right) {
 bigint operator- (const bigint& left, const bigint& right) {
     bigint bigDiff;
     if (left.negative == right.negative) {
-        if (do_bigless(left.big_value, right.big_value)) {
+        if (isLess(left.big_value, right.big_value)) {
             bigDiff.big_value = bigSub(right.big_value, 
                     left.big_value);
             bigDiff.negative = not right.negative;
@@ -235,7 +235,7 @@ bigint operator* (const bigint& left, const bigint& right) {
 
 
 
-bigintFunc partial_prod(const bigintFunc& x, size_t k) {
+bigintFunc pprod(const bigintFunc& x, size_t k) {
     int carryOver = 0;
     bigintFunc prod(x.size() + 1, 0);
     int tmp = 0;
@@ -353,14 +353,14 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     int kInc;
 
     fInc = 10 / (y.at(m - 1) + 1);
-    rInc = partial_prod(x, fInc);
-    dInc = partial_prod(y, fInc);
+    rInc = pprod(x, fInc);
+    dInc = pprod(y, fInc);
     for (kInc = n - m; kInc >= 0; kInc--) {
         qInc = trialdigit(rInc, dInc, kInc, m);
-        dInc2 = partial_prod(dInc, qInc);
+        dInc2 = pprod(dInc, qInc);
         if (smaller(rInc, dInc2, kInc, m)) {
             qInc = qInc - 1;
-            dInc2 = partial_prod(dInc, qInc);
+            dInc2 = pprod(dInc, qInc);
         }
 
         qtr.at(kInc) = qInc;
@@ -425,12 +425,12 @@ bool operator< (const bigint& left, const bigint& right) {
     bool isCorrectOperator = false;
     if (left.negative) {
         if (right.negative) 
-            isCorrectOperator = do_bigless(right.big_value, left.big_value);
+            isCorrectOperator = isLess(right.big_value, left.big_value);
         else 
             isCorrectOperator = true;
     } else {
         if (!right.negative)
-            isCorrectOperator = do_bigless(left.big_value, right.big_value);           
+            isCorrectOperator = isLess(left.big_value, right.big_value);           
         else 
             isCorrectOperator = false;
     }
