@@ -57,7 +57,7 @@ void ubigint::divide_by_2() {
    uvalue /= 2;
 }
 
-
+
 struct quo_rem { ubigint quotient; ubigint remainder; };
 
 
