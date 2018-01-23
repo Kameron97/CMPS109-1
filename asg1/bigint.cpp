@@ -278,7 +278,7 @@ bigintFunc prem(const bigintFunc& x, size_t k) {
 }
 
 
-digit_t trialdigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
+digit_t isCorrectDigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
     int rInc = 0;
     size_t kInc = k + m;
 
@@ -356,7 +356,7 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     rInc = pprod(x, fInc);
     dInc = pprod(y, fInc);
     for (kInc = n - m; kInc >= 0; kInc--) {
-        qInc = trialdigit(rInc, dInc, kInc, m);
+        qInc = isCorrectDigit(rInc, dInc, kInc, m);
         dInc2 = pprod(dInc, qInc);
         if (smaller(rInc, dInc2, kInc, m)) {
             qInc = qInc - 1;

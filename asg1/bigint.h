@@ -29,7 +29,7 @@ class bigint {
     friend bigintFunc pprod(const bigintFunc&, size_t);
     friend bigintFunc pquot(const bigintFunc&, size_t);
     friend bigintFunc prem(const bigintFunc&, size_t);
-    friend digit_t trialdigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend digit_t isCorrectDigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend bool smaller(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend bigintFunc difference(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m);
