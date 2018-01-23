@@ -132,7 +132,7 @@ bigintFunc bigSub (const bigintFunc& left, const bigintFunc& right) {
 }
 
 
-bool bigDiff (const bigintFunc& left, const bigintFunc& right) {
+bool do_bigless (const bigintFunc& left, const bigintFunc& right) {
     if (left.size() > right.size()) {
         return false;
     } else {
@@ -158,7 +158,7 @@ bool bigDiff (const bigintFunc& left, const bigintFunc& right) {
 bigint operator+ (const bigint& left, const bigint& right) {
     bigint bigSum;
     if (left.negative != right.negative) {
-        if (bigDiff(left.big_value, right.big_value)) {
+        if (do_bigless(left.big_value, right.big_value)) {
             bigSum.big_value = bigSub(right.big_value, left.big_value);
             bigSum.negative = right.negative;
         } else { 
@@ -176,7 +176,7 @@ bigint operator+ (const bigint& left, const bigint& right) {
 bigint operator- (const bigint& left, const bigint& right) {
     bigint bigDiff;
     if (left.negative == right.negative) {
-        if (bigDiff(left.big_value, right.big_value)) {
+        if (do_bigless(left.big_value, right.big_value)) {
             bigDiff.big_value = bigSub(right.big_value, 
                     left.big_value);
             bigDiff.negative = not right.negative;
@@ -425,12 +425,12 @@ bool operator< (const bigint& left, const bigint& right) {
     bool isCorrectOperator = false;
     if (left.negative) {
         if (right.negative) 
-            isCorrectOperator = bigDiff(right.big_value, left.big_value);
+            isCorrectOperator = do_bigless(right.big_value, left.big_value);
         else 
             isCorrectOperator = true;
     } else {
         if (!right.negative)
-            isCorrectOperator = bigDiff(left.big_value, right.big_value);           
+            isCorrectOperator = do_bigless(left.big_value, right.big_value);           
         else 
             isCorrectOperator = false;
     }
