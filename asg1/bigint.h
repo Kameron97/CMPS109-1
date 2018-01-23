@@ -29,14 +29,10 @@ class bigint {
     friend bigintFunc partial_prod(const bigintFunc&, size_t);
     friend bigintFunc partial_quot(const bigintFunc&, size_t);
     friend bigintFunc partial_rem(const bigintFunc&, size_t);
-    friend digit_t trialdigit(const bigintFunc&, const bigintFunc&,
-                              size_t, size_t);
-    friend bool smaller(const bigintFunc&, const bigintFunc&,
-                        size_t, size_t);
-    friend bigintFunc difference(const bigintFunc&, const bigintFunc&,
-                                 size_t, size_t);
-    friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,
-                            size_t n, size_t m);
+    friend digit_t trialdigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend bool smaller(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend bigintFunc difference(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m);
     friend quot_rem divide(const bigintFunc& x, const bigintFunc& y);
   
   
