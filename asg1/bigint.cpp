@@ -52,8 +52,8 @@ void bigint::init (const string& that) {
 bigintFunc do_bigadd (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc sumAdd;
     size_t i = 0;
-    digit_t borrow(0);
-    digit_t digSum(0);
+    digitFunc borrow(0);
+    digitFunc digSum(0);
     while (i < min(left.size(), right.size())) {
         digSum = left.at(i) + right.at(i) + borrow;
         if (digSum <= 9) {
@@ -96,8 +96,8 @@ bigintFunc do_bigadd (const bigintFunc& left, const bigintFunc& right) {
 
 bigintFunc do_bigsub (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc diffSub;
-    digit_t borrow(0);
-    digit_t digSub(0);
+    digitFunc borrow(0);
+    digitFunc digSub(0);
     size_t i = 0;
     
     while (i < right.size()) {
@@ -210,7 +210,7 @@ bigint operator- (const bigint& right) {
 
 bigintFunc do_bigmul (const bigintFunc& left, const bigintFunc& right) {
     bigintFunc prod(left.size() + right.size(), 0);
-    digit_t count, dInc;
+    digitFunc count, dInc;
     for (size_t i = 0; i < left.size(); i++) {
         count = 0;
         for (size_t j = 0; j < right.size(); j++) {
@@ -278,7 +278,7 @@ bigintFunc partial_rem(const bigintFunc& x, size_t k) {
 }
 
 
-digit_t trialdigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
+digitFunc trialdigit(const bigintFunc& r, const bigintFunc& d, size_t k, size_t m) {
     int rInc = 0;
     size_t kInc = k + m;
 
