@@ -23,7 +23,7 @@ class bigint {
     using unumber = unsigned long;
     friend quot_rem divide (const bigint&, const bigint&);
     friend bigintFunc bigAdd (const bigintFunc&, const bigintFunc&);
-    friend bigintFunc do_bigsub (const bigintFunc&, const bigintFunc&);
+    friend bigintFunc bigSub (const bigintFunc&, const bigintFunc&);
     friend bigintFunc do_bigmul (const bigintFunc&, const bigintFunc&);
     friend bool do_bigless (const bigintFunc&, const bigintFunc&);
     friend bigintFunc partial_prod(const bigintFunc&, size_t);
