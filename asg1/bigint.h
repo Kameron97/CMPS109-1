@@ -7,8 +7,8 @@
 using namespace std;
 
 #include "debug.h"
-using digit_t = unsigned char;
-using bigintFunc = vector<digit_t>;
+using digitFunc = unsigned char;
+using bigintFunc = vector<digitFunc>;
 
 class bigint {
     friend ostream& operator<< (ostream&, const bigint&);
@@ -29,7 +29,7 @@ class bigint {
     friend bigintFunc partial_prod(const bigintFunc&, size_t);
     friend bigintFunc partial_quot(const bigintFunc&, size_t);
     friend bigintFunc partial_rem(const bigintFunc&, size_t);
-    friend digit_t trialdigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
+    friend digitFunc trialdigit(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend bool smaller(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend bigintFunc difference(const bigintFunc&, const bigintFunc&, size_t, size_t);
     friend quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size_t m);
