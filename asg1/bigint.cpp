@@ -1,3 +1,14 @@
+/*
+Aravind Patnam
+apatnam@ucsc.edu
+ASG1 = DC Calc
+January 22nd, 2018
+*/
+
+
+
+
+
 #include <cstdlib>
 #include <exception>
 #include <limits>
