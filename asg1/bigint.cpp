@@ -250,7 +250,7 @@ bigintFunc pprod(const bigintFunc& x, size_t k) {
     return prod;
 }
 
-bigintFunc partial_quot(const bigintFunc& x, size_t k) {
+bigintFunc pquot(const bigintFunc& x, size_t k) {
     int carryOver = 0; 
     bigintFunc quotient(x.size(), 0);
     size_t i = x.size() - 1;
@@ -372,7 +372,7 @@ bigint::quot_rem longdiv(const bigintFunc& x, const bigintFunc& y,size_t n, size
     while (qtr.size() > 1 && qtr.back() == 0)
         qtr.pop_back();
    
-    return make_pair(bigint(qtr), bigint(partial_quot(rInc,fInc)));
+    return make_pair(bigint(qtr), bigint(pquot(rInc,fInc)));
 }
 
 bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
@@ -384,7 +384,7 @@ bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
         }       
     } else {
         int yInc = y.at(y.size() - 1);
-        return make_pair(bigint(partial_quot(x, yInc)), bigint(partial_rem(x, yInc)));
+        return make_pair(bigint(pquot(x, yInc)), bigint(partial_rem(x, yInc)));
     }
 }
 
