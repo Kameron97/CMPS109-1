@@ -75,16 +75,5 @@ ostream& operator<< (ostream& out, const bigintFunc& that);
 
 bigint pow (const bigint& base, const bigint& exponent);
 
-inline bool operator!= (const bigint &left, const bigint &right) {
-    return not (left == right);
-}
-inline bool operator>  (const bigint &left, const bigint &right) {
-    return right < left;
-}
-inline bool operator<= (const bigint &left, const bigint &right) {
-    return not (right < left);
-}
-inline bool operator>= (const bigint &left, const bigint &right) {
-    return not (left < right);
-}
+
 #endif
