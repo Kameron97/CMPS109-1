@@ -267,7 +267,7 @@ bigintFunc pquot(const bigintFunc& x, size_t k) {
     return quotient;
 }
 
-bigintFunc partial_rem(const bigintFunc& x, size_t k) {
+bigintFunc prem(const bigintFunc& x, size_t k) {
     int carryOver = 0;
     size_t i = x.size() - 1;
     while (i < x.size()) {
@@ -384,7 +384,7 @@ bigint::quot_rem divide(const bigintFunc& x, const bigintFunc& y) {
         }       
     } else {
         int yInc = y.at(y.size() - 1);
-        return make_pair(bigint(pquot(x, yInc)), bigint(partial_rem(x, yInc)));
+        return make_pair(bigint(pquot(x, yInc)), bigint(prem(x, yInc)));
     }
 }
 
